@@ -1,0 +1,121 @@
+---
+title: "Data Structures"
+output: 
+  html_document:
+    keep_md: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Table of Contents
+
+1. [Table of Contents](#table-of-contents)
+2. [Basics](#some-terminology-basics)
+3. [Data frame basics](#data-frame-basics)
+4. [Filter and Project](#filter-and-project)
+5. [Adding Rows and Columns](#adding-rows-and-columns)
+6. [Joining and Aggregating](#joining-and-aggregating)
+
+
+### Some terminology basics
+
+1. Types of **atomic vectors** (see [more](http://arrgh.tim-smith.us/atomic.html) on **vectors** from Tim Smith's page)
+    - logical (may contain TRUE, FALSE, NA)
+    - integer
+    - double
+    - complex (as in complex numbers; write as 0+0i)
+    - character
+    - raw (for bitstreams; printed in hex by default. Logical operators magically operate bitwise on these; they operate elementwise on all other vector types.)
+    
+2. **Arrays** include
+    - **vectors** (i.e. 1 dimensional **arrays**)
+    - **matrices** (i.e. 2 dimensional **arrays**)
+    
+4. Type of dimension labels:
+    - `dimnames()` for **arrays**
+    - `rownames()`, `colnames()` for **matrices** and **data frames**
+    - `names()` for **atomic vectors** and **lists**
+	
+5. Coercing a **data frame**
+    - From data frame to **array**: gets treated like 2d **matrices**
+    - From data frame to **list** : gets treated like **list of vectors**
+
+[top](#table-of-contents)
+
+### Data Frame Basics
+
+```{r data-frame-example}
+df = data.frame( 
+  col.1 = as.factor(c('a','b','a','b')), 
+  col.2 = rnorm(1:4), 
+  col.3 = 5:8 
+)
+print(df)
+
+# Isolate a column i.e. a dimension, a sample variable
+print(df$col.2)
+
+# Isolate a row i.e. a record, a sample observation
+print(df[1,])
+
+# An abbreviated view of the data frame
+str(df)
+```
+[top](#table-of-contents)
+
+### Filter and Project
+
+```{r filter-and-protect}
+
+# Create copy of data frame after filtering out rows i.e. records, sample observations
+subset(df, df$col.1=='a')
+
+# You may filter and project a data frame with [,]
+# From an SQL perspective, visualize it as dataframe[ WHERE, SELECT ]
+#
+df[ df$col.3 > 6, ] # Note 2nd param in [,] is blank to indicate all variables
+```
+[top](#table-of-contents)
+
+### Adding Rows and Columns
+```{r add-rows-and-cols}
+# Adding a column (i.e. dimension, variable) is easy
+df$col.4 = NA
+print(df)
+
+# Adding rows is easy too. First, we will make some new rows
+df.more = data.frame( 
+  col.1 = as.factor(c('a','b')), 
+  col.2 = rnorm(1:2), 
+  col.3 = 9:10,
+  col.4 = rep("new",2)
+)
+
+# Now combine the rows, as in an SQL UNION
+rbind(df, df.more)
+```
+[top](#table-of-contents)
+
+### Joining and Aggregating
+
+```{r pply}
+
+# Create a reference table.  We will use this to do a key lookup based on col.1
+df.ref = data.frame( 
+  col.1 = as.factor(c('a','b')), 
+  col.ref =c('AA','BB')
+)
+print(df.ref)
+
+# Using the plyr library we can JOIN the reference data to the original data
+library(plyr)
+join(df, df.ref, by="col.1")
+
+# We can also use the plyr library for GROUP BY operations on data projections
+library(plyr)
+ddply( df, .(col.1), summarize, sum.col.2 = sum(col.2), min.col.3 = min(col.3) )
+```
+[top](#table-of-contents)
+
