@@ -44,7 +44,7 @@ knitr::opts_chunk$set(echo = TRUE)
 	
 5. Coercing a **data frame**
     - From data frame to **array**: gets treated like 2d **matrices**
-    - From data frame to **list** : gets treated like **list of vectors**
+    - From data frame to **list** : gets treated like a **list of vectors**
 
 [top](#table-of-contents)
 
@@ -118,7 +118,7 @@ df[ df$col.1 == 'a', c("col.1", "col.3") ]
 ```{r order-by}
 # Recall you may access a row by its name, which by default is an integer sequence: 1, 2, ..., nrow
 print( df[1,] )
-# This means that you may access rows in order of your choice
+# You may also access rows in order of your choice
 df[ nrow(df):1, ]
 # The order() function in base R takes column names (use '-' for descending)
 df[ order(df$col.1, -df$col.2), ]
