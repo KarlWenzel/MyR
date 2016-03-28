@@ -12,16 +12,17 @@ knitr::opts_chunk$set(echo = TRUE)
 ### Table of Contents
 
 1. [Table of Contents](#table-of-contents)
-2. [Basics](#some-terminology-basics)
+2. [Basics](#some-basics)
 3. [Data Frames](#data-frame-basics)
     - [Get Rows and Columns](#get-rows-and-columns)
     - [Add Rows and Columns](#add-rows-and-columns)
     - [Filter and Project](#filter-and-project)
+    - [Warning with Brackets](#warning-with-brackets)
     - [Join and Aggregate](#join-and-aggregate)
 4. [Lists](#list-basics)
 
 
-### Some terminology basics
+### Some Basics
 
 1. Types of **atomic vectors** (see [more](http://arrgh.tim-smith.us/atomic.html) on **vectors** from Tim Smith's page)
     - logical (may contain TRUE, FALSE, NA)
@@ -69,14 +70,14 @@ str(df)
 #   i.e. names of sample variables
 colnames(df)
 # Isolate a column
-print(df$col.2)
+print( df$col.2 )
 # You may get/set the row names
 #   i.e. names of records 
 #   i.e. names of tuples 
 #   i.e. names of sample observations
 rownames(df)
 # Isolate a row 
-print(df[1,])
+print( df[1,] )
 ```
 [top](#table-of-contents)
 
@@ -103,15 +104,27 @@ rbind(df, df.more)
 
 ```{r filter-and-protect}
 
-# Make new data frame after filtering out rows
-subset(df, df$col.1=='a')
+# Create filtered subset of rows
+subset(df, df$col.1 == 'a')
 
 # You may filter and project a data frame with [,]
 # From an SQL perspective, visualize it as dataframe[ WHERE, SELECT ]
 #
-df[ df$col.3 > 6, ] # Note 2nd param in [,] is blank to indicate all variables
+df[ df$col.1 == 'a', ] # Note 2nd param in [,] is blank to indicate all variables
 # Here it is again but with specific columns being projected
-df[ df$col.3 > 6, c("col.1", "col.3") ]
+df[ df$col.1 == 'a', c("col.1", "col.3") ]
+```
+[top](#table-of-contents)
+
+#### Warning with Brackets
+```{r brackets}
+# Be careful when using [] with dataframe instead of [,]
+#   this specifies what column(s) to project
+
+# From an SQL perspective, visualize it as dataframe[ SELECT ] 
+df[1]
+# May also use a column name as a key
+df["col.1"]
 ```
 [top](#table-of-contents)
 
@@ -149,12 +162,12 @@ x[1:3]
 # Subset the list to only include a specific element
 x[1]
 # Obtain element from list
-x[[1]]
+x[[1]] # equivalent to unlist(x[1]), see below
 # Convert from list subset to vector of contained elements (assuming consistent element types)
 unlist( x[1:2] )
 # If a subset query matches no elements, then a list with NULL as its only element is returned
 x[5000]
-# However trying to access an element that does not exist is a error state
+# However trying to access an element that does not exist is an error state
 tryCatch({
     x[[5000]]
   }

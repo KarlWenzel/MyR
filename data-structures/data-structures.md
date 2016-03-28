@@ -5,16 +5,17 @@
 ### Table of Contents
 
 1. [Table of Contents](#table-of-contents)
-2. [Basics](#some-terminology-basics)
+2. [Basics](#some-basics)
 3. [Data Frames](#data-frame-basics)
     - [Get Rows and Columns](#get-rows-and-columns)
     - [Add Rows and Columns](#add-rows-and-columns)
     - [Filter and Project](#filter-and-project)
+    - [Warning with Brackets](#warning-with-brackets)
     - [Join and Aggregate](#join-and-aggregate)
 4. [Lists](#list-basics)
 
 
-### Some terminology basics
+### Some Basics
 
 1. Types of **atomic vectors** (see [more](http://arrgh.tim-smith.us/atomic.html) on **vectors** from Tim Smith's page)
     - logical (may contain TRUE, FALSE, NA)
@@ -54,10 +55,10 @@ print(df)
 
 ```
 ##   col.1       col.2 col.3
-## 1     a -0.03433487     5
-## 2     b  0.63756573     6
-## 3     a -0.40166356     7
-## 4     b  0.20032599     8
+## 1     a -0.60899513     5
+## 2     b -0.29201327     6
+## 3     a  0.56647824     7
+## 4     b  0.09076276     8
 ```
 
 ```r
@@ -68,7 +69,7 @@ str(df)
 ```
 ## 'data.frame':	4 obs. of  3 variables:
 ##  $ col.1: Factor w/ 2 levels "a","b": 1 2 1 2
-##  $ col.2: num  -0.0343 0.6376 -0.4017 0.2003
+##  $ col.2: num  -0.609 -0.292 0.5665 0.0908
 ##  $ col.3: int  5 6 7 8
 ```
 [top](#table-of-contents)
@@ -89,11 +90,11 @@ colnames(df)
 
 ```r
 # Isolate a column
-print(df$col.2)
+print( df$col.2 )
 ```
 
 ```
-## [1] -0.03433487  0.63756573 -0.40166356  0.20032599
+## [1] -0.60899513 -0.29201327  0.56647824  0.09076276
 ```
 
 ```r
@@ -110,12 +111,12 @@ rownames(df)
 
 ```r
 # Isolate a row 
-print(df[1,])
+print( df[1,] )
 ```
 
 ```
-##   col.1       col.2 col.3
-## 1     a -0.03433487     5
+##   col.1      col.2 col.3
+## 1     a -0.6089951     5
 ```
 [top](#table-of-contents)
 
@@ -129,10 +130,10 @@ print(df)
 
 ```
 ##   col.1       col.2 col.3 col.4
-## 1     a -0.03433487     5    NA
-## 2     b  0.63756573     6    NA
-## 3     a -0.40166356     7    NA
-## 4     b  0.20032599     8    NA
+## 1     a -0.60899513     5    NA
+## 2     b -0.29201327     6    NA
+## 3     a  0.56647824     7    NA
+## 4     b  0.09076276     8    NA
 ```
 
 ```r
@@ -150,12 +151,12 @@ rbind(df, df.more)
 
 ```
 ##   col.1       col.2 col.3 col.4
-## 1     a -0.03433487     5  <NA>
-## 2     b  0.63756573     6  <NA>
-## 3     a -0.40166356     7  <NA>
-## 4     b  0.20032599     8  <NA>
-## 5     a  0.32739819     9   new
-## 6     b -0.78010059    10   new
+## 1     a -0.60899513     5  <NA>
+## 2     b -0.29201327     6  <NA>
+## 3     a  0.56647824     7  <NA>
+## 4     b  0.09076276     8  <NA>
+## 5     a -1.81260909     9   new
+## 6     b -0.42322309    10   new
 ```
 [top](#table-of-contents)
 
@@ -163,38 +164,70 @@ rbind(df, df.more)
 
 
 ```r
-# Make new data frame after filtering out rows
-subset(df, df$col.1=='a')
+# Create filtered subset of rows
+subset(df, df$col.1 == 'a')
 ```
 
 ```
-##   col.1       col.2 col.3 col.4
-## 1     a -0.03433487     5    NA
-## 3     a -0.40166356     7    NA
+##   col.1      col.2 col.3 col.4
+## 1     a -0.6089951     5    NA
+## 3     a  0.5664782     7    NA
 ```
 
 ```r
 # You may filter and project a data frame with [,]
 # From an SQL perspective, visualize it as dataframe[ WHERE, SELECT ]
 #
-df[ df$col.3 > 6, ] # Note 2nd param in [,] is blank to indicate all variables
+df[ df$col.1 == 'a', ] # Note 2nd param in [,] is blank to indicate all variables
 ```
 
 ```
 ##   col.1      col.2 col.3 col.4
-## 3     a -0.4016636     7    NA
-## 4     b  0.2003260     8    NA
+## 1     a -0.6089951     5    NA
+## 3     a  0.5664782     7    NA
 ```
 
 ```r
 # Here it is again but with specific columns being projected
-df[ df$col.3 > 6, c("col.1", "col.3") ]
+df[ df$col.1 == 'a', c("col.1", "col.3") ]
 ```
 
 ```
 ##   col.1 col.3
+## 1     a     5
 ## 3     a     7
-## 4     b     8
+```
+[top](#table-of-contents)
+
+#### Warning with Brackets
+
+```r
+# Be careful when using [] with dataframe instead of [,]
+#   this specifies what column(s) to project
+
+# From an SQL perspective, visualize it as dataframe[ SELECT ] 
+df[1]
+```
+
+```
+##   col.1
+## 1     a
+## 2     b
+## 3     a
+## 4     b
+```
+
+```r
+# May also use a column name as a key
+df["col.1"]
+```
+
+```
+##   col.1
+## 1     a
+## 2     b
+## 3     a
+## 4     b
 ```
 [top](#table-of-contents)
 
@@ -225,10 +258,10 @@ join(df, df.ref, by="col.1")
 
 ```
 ##   col.1       col.2 col.3 col.4 col.ref1 col.ref2
-## 1     a -0.03433487     5    NA       AA      aaa
-## 2     b  0.63756573     6    NA       BB      bbb
-## 3     a -0.40166356     7    NA       AA      aaa
-## 4     b  0.20032599     8    NA       BB      bbb
+## 1     a -0.60899513     5    NA       AA      aaa
+## 2     b -0.29201327     6    NA       BB      bbb
+## 3     a  0.56647824     7    NA       AA      aaa
+## 4     b  0.09076276     8    NA       BB      bbb
 ```
 
 ```r
@@ -238,9 +271,9 @@ ddply( df, .(col.1), summarize, sum.col.2 = sum(col.2), min.col.3 = min(col.3) )
 ```
 
 ```
-##   col.1  sum.col.2 min.col.3
-## 1     a -0.4359984         5
-## 2     b  0.8378917         6
+##   col.1   sum.col.2 min.col.3
+## 1     a -0.04251689         5
+## 2     b -0.20125051         6
 ```
 [top](#table-of-contents)
 
@@ -292,7 +325,7 @@ x[1]
 
 ```r
 # Obtain element from list
-x[[1]]
+x[[1]] # equivalent to unlist(x[1]), see below
 ```
 
 ```
