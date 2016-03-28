@@ -6,10 +6,12 @@
 
 1. [Table of Contents](#table-of-contents)
 2. [Basics](#some-terminology-basics)
-3. [Data frame basics](#data-frame-basics)
-4. [Filter and Project](#filter-and-project)
-5. [Adding Rows and Columns](#adding-rows-and-columns)
-6. [Joining and Aggregating](#joining-and-aggregating)
+3. [Data Frames](#data-frame-basics)
+    - [Get Rows and Columns](#get-rows-and-columns)
+    - [Add Rows and Columns](#add-rows-and-columns)
+    - [Filter and Project](#filter-and-project)
+    - [Join and Aggregate](#join-and-aggregate)
+4. [Lists](#list-basics)
 
 
 ### Some terminology basics
@@ -41,6 +43,7 @@
 
 
 ```r
+#Here is a data frame
 df = data.frame( 
   col.1 = as.factor(c('a','b','a','b')), 
   col.2 = rnorm(1:4), 
@@ -50,87 +53,86 @@ print(df)
 ```
 
 ```
-##   col.1      col.2 col.3
-## 1     a -1.6712098     5
-## 2     b  0.1793051     6
-## 3     a  0.8901839     7
-## 4     b -0.2884902     8
+##   col.1       col.2 col.3
+## 1     a -0.03433487     5
+## 2     b  0.63756573     6
+## 3     a -0.40166356     7
+## 4     b  0.20032599     8
 ```
 
 ```r
-# Isolate a column i.e. a dimension, a sample variable
-print(df$col.2)
-```
-
-```
-## [1] -1.6712098  0.1793051  0.8901839 -0.2884902
-```
-
-```r
-# Isolate a row i.e. a record, a sample observation
-print(df[1,])
-```
-
-```
-##   col.1    col.2 col.3
-## 1     a -1.67121     5
-```
-
-```r
-# An abbreviated view of the data frame
+# An abbreviated view of the data frame.  Good for investigation of newly read/created data
 str(df)
 ```
 
 ```
 ## 'data.frame':	4 obs. of  3 variables:
 ##  $ col.1: Factor w/ 2 levels "a","b": 1 2 1 2
-##  $ col.2: num  -1.671 0.179 0.89 -0.288
+##  $ col.2: num  -0.0343 0.6376 -0.4017 0.2003
 ##  $ col.3: int  5 6 7 8
 ```
 [top](#table-of-contents)
 
-### Filter and Project
+#### Get Rows and Columns
 
 
 ```r
-# Create copy of data frame after filtering out rows i.e. records, sample observations
-subset(df, df$col.1=='a')
+# You may get/set the column names 
+#   i.e. names of dimensions 
+#   i.e. names of sample variables
+colnames(df)
 ```
 
 ```
-##   col.1      col.2 col.3
-## 1     a -1.6712098     5
-## 3     a  0.8901839     7
+## [1] "col.1" "col.2" "col.3"
 ```
 
 ```r
-# You may filter and project a data frame with [,]
-# From an SQL perspective, visualize it as dataframe[ WHERE, SELECT ]
-#
-df[ df$col.3 > 6, ] # Note 2nd param in [,] is blank to indicate all variables
+# Isolate a column
+print(df$col.2)
 ```
 
 ```
-##   col.1      col.2 col.3
-## 3     a  0.8901839     7
-## 4     b -0.2884902     8
+## [1] -0.03433487  0.63756573 -0.40166356  0.20032599
+```
+
+```r
+# You may get/set the row names
+#   i.e. names of records 
+#   i.e. names of tuples 
+#   i.e. names of sample observations
+rownames(df)
+```
+
+```
+## [1] "1" "2" "3" "4"
+```
+
+```r
+# Isolate a row 
+print(df[1,])
+```
+
+```
+##   col.1       col.2 col.3
+## 1     a -0.03433487     5
 ```
 [top](#table-of-contents)
 
-### Adding Rows and Columns
+#### Add Rows and Columns
 
 ```r
-# Adding a column (i.e. dimension, variable) is easy
+# Adding a column is easy
 df$col.4 = NA
 print(df)
 ```
 
 ```
-##   col.1      col.2 col.3 col.4
-## 1     a -1.6712098     5    NA
-## 2     b  0.1793051     6    NA
-## 3     a  0.8901839     7    NA
-## 4     b -0.2884902     8    NA
+##   col.1       col.2 col.3 col.4
+## 1     a -0.03433487     5    NA
+## 2     b  0.63756573     6    NA
+## 3     a -0.40166356     7    NA
+## 4     b  0.20032599     8    NA
 ```
 
 ```r
@@ -147,32 +149,72 @@ rbind(df, df.more)
 ```
 
 ```
-##   col.1      col.2 col.3 col.4
-## 1     a -1.6712098     5  <NA>
-## 2     b  0.1793051     6  <NA>
-## 3     a  0.8901839     7  <NA>
-## 4     b -0.2884902     8  <NA>
-## 5     a  0.7096711     9   new
-## 6     b -0.4124081    10   new
+##   col.1       col.2 col.3 col.4
+## 1     a -0.03433487     5  <NA>
+## 2     b  0.63756573     6  <NA>
+## 3     a -0.40166356     7  <NA>
+## 4     b  0.20032599     8  <NA>
+## 5     a  0.32739819     9   new
+## 6     b -0.78010059    10   new
 ```
 [top](#table-of-contents)
 
-### Joining and Aggregating
+#### Filter and Project
+
+
+```r
+# Make new data frame after filtering out rows
+subset(df, df$col.1=='a')
+```
+
+```
+##   col.1       col.2 col.3 col.4
+## 1     a -0.03433487     5    NA
+## 3     a -0.40166356     7    NA
+```
+
+```r
+# You may filter and project a data frame with [,]
+# From an SQL perspective, visualize it as dataframe[ WHERE, SELECT ]
+#
+df[ df$col.3 > 6, ] # Note 2nd param in [,] is blank to indicate all variables
+```
+
+```
+##   col.1      col.2 col.3 col.4
+## 3     a -0.4016636     7    NA
+## 4     b  0.2003260     8    NA
+```
+
+```r
+# Here it is again but with specific columns being projected
+df[ df$col.3 > 6, c("col.1", "col.3") ]
+```
+
+```
+##   col.1 col.3
+## 3     a     7
+## 4     b     8
+```
+[top](#table-of-contents)
+
+#### Join and Aggregate
 
 
 ```r
 # Create a reference table.  We will use this to do a key lookup based on col.1
 df.ref = data.frame( 
   col.1 = as.factor(c('a','b')), 
-  col.ref =c('AA','BB')
+  col.ref1 = c('AA','BB'),
+  col.ref2 = c('aaa','bbb')
 )
 print(df.ref)
 ```
 
 ```
-##   col.1 col.ref
-## 1     a      AA
-## 2     b      BB
+##   col.1 col.ref1 col.ref2
+## 1     a       AA      aaa
+## 2     b       BB      bbb
 ```
 
 ```r
@@ -182,11 +224,11 @@ join(df, df.ref, by="col.1")
 ```
 
 ```
-##   col.1      col.2 col.3 col.4 col.ref
-## 1     a -1.6712098     5    NA      AA
-## 2     b  0.1793051     6    NA      BB
-## 3     a  0.8901839     7    NA      AA
-## 4     b -0.2884902     8    NA      BB
+##   col.1       col.2 col.3 col.4 col.ref1 col.ref2
+## 1     a -0.03433487     5    NA       AA      aaa
+## 2     b  0.63756573     6    NA       BB      bbb
+## 3     a -0.40166356     7    NA       AA      aaa
+## 4     b  0.20032599     8    NA       BB      bbb
 ```
 
 ```r
@@ -197,8 +239,104 @@ ddply( df, .(col.1), summarize, sum.col.2 = sum(col.2), min.col.3 = min(col.3) )
 
 ```
 ##   col.1  sum.col.2 min.col.3
-## 1     a -0.7810258         5
-## 2     b -0.1091851         6
+## 1     a -0.4359984         5
+## 2     b  0.8378917         6
 ```
 [top](#table-of-contents)
+
+### List Basics
+
+
+```r
+# Create a list.  The '.' function from the plyr library is handy for this.
+library(plyr)
+x = .(1, 2, "three", as.factor(4))
+str(x)
+```
+
+```
+## List of 4
+##  $ 1           : num 1
+##  $ 2           : num 2
+##  $ "three"     : chr "three"
+##  $ as.factor(4): language as.factor(4)
+##  - attr(*, "env")=<environment: R_GlobalEnv> 
+##  - attr(*, "class")= chr "quoted"
+```
+
+```r
+# Subset the list
+x[1:3]
+```
+
+```
+## List of 3
+##  $ 1      : num 1
+##  $ 2      : num 2
+##  $ "three": chr "three"
+##  - attr(*, "env")=<environment: R_GlobalEnv> 
+##  - attr(*, "class")= chr "quoted"
+```
+
+```r
+# Subset the list to only include a specific element
+x[1]
+```
+
+```
+## List of 1
+##  $ 1: num 1
+##  - attr(*, "env")=<environment: R_GlobalEnv> 
+##  - attr(*, "class")= chr "quoted"
+```
+
+```r
+# Obtain element from list
+x[[1]]
+```
+
+```
+## [1] 1
+```
+
+```r
+# Convert from list subset to vector of contained elements (assuming consistent element types)
+unlist( x[1:2] )
+```
+
+```
+## [1] 1 2
+```
+
+```r
+# If a subset query matches no elements, then a list with NULL as its only element is returned
+x[5000]
+```
+
+```
+## List of 1
+##  $ NULL: NULL
+##  - attr(*, "env")=<environment: R_GlobalEnv> 
+##  - attr(*, "class")= chr "quoted"
+```
+
+```r
+# However trying to access an element that does not exist is a error state
+tryCatch({
+    x[[5000]]
+  }
+  ,error=function(cond) {
+    print(cond)
+  }
+)
+```
+
+```
+## <simpleError in x[[5000]]: subscript out of bounds>
+```
+[top](#table-of-contents)
+
+
+
+
 

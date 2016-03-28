@@ -13,10 +13,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
 1. [Table of Contents](#table-of-contents)
 2. [Basics](#some-terminology-basics)
-3. [Data frame basics](#data-frame-basics)
-4. [Filter and Project](#filter-and-project)
-5. [Adding Rows and Columns](#adding-rows-and-columns)
-6. [Joining and Aggregating](#joining-and-aggregating)
+3. [Data Frames](#data-frame-basics)
+    - [Get Rows and Columns](#get-rows-and-columns)
+    - [Add Rows and Columns](#add-rows-and-columns)
+    - [Filter and Project](#filter-and-project)
+    - [Join and Aggregate](#join-and-aggregate)
+4. [Lists](#list-basics)
 
 
 ### Some terminology basics
@@ -47,41 +49,40 @@ knitr::opts_chunk$set(echo = TRUE)
 ### Data Frame Basics
 
 ```{r data-frame-example}
+#Here is a data frame
 df = data.frame( 
   col.1 = as.factor(c('a','b','a','b')), 
   col.2 = rnorm(1:4), 
   col.3 = 5:8 
 )
 print(df)
-
-# Isolate a column i.e. a dimension, a sample variable
-print(df$col.2)
-
-# Isolate a row i.e. a record, a sample observation
-print(df[1,])
-
-# An abbreviated view of the data frame
+# An abbreviated view of the data frame.  Good for investigation of newly read/created data
 str(df)
 ```
 [top](#table-of-contents)
 
-### Filter and Project
+#### Get Rows and Columns
 
-```{r filter-and-protect}
-
-# Create copy of data frame after filtering out rows i.e. records, sample observations
-subset(df, df$col.1=='a')
-
-# You may filter and project a data frame with [,]
-# From an SQL perspective, visualize it as dataframe[ WHERE, SELECT ]
-#
-df[ df$col.3 > 6, ] # Note 2nd param in [,] is blank to indicate all variables
+```{r get-rows-and-cols}
+# You may get/set the column names 
+#   i.e. names of dimensions 
+#   i.e. names of sample variables
+colnames(df)
+# Isolate a column
+print(df$col.2)
+# You may get/set the row names
+#   i.e. names of records 
+#   i.e. names of tuples 
+#   i.e. names of sample observations
+rownames(df)
+# Isolate a row 
+print(df[1,])
 ```
 [top](#table-of-contents)
 
-### Adding Rows and Columns
+#### Add Rows and Columns
 ```{r add-rows-and-cols}
-# Adding a column (i.e. dimension, variable) is easy
+# Adding a column is easy
 df$col.4 = NA
 print(df)
 
@@ -98,14 +99,31 @@ rbind(df, df.more)
 ```
 [top](#table-of-contents)
 
-### Joining and Aggregating
+#### Filter and Project
+
+```{r filter-and-protect}
+
+# Make new data frame after filtering out rows
+subset(df, df$col.1=='a')
+
+# You may filter and project a data frame with [,]
+# From an SQL perspective, visualize it as dataframe[ WHERE, SELECT ]
+#
+df[ df$col.3 > 6, ] # Note 2nd param in [,] is blank to indicate all variables
+# Here it is again but with specific columns being projected
+df[ df$col.3 > 6, c("col.1", "col.3") ]
+```
+[top](#table-of-contents)
+
+#### Join and Aggregate
 
 ```{r pply}
 
 # Create a reference table.  We will use this to do a key lookup based on col.1
 df.ref = data.frame( 
   col.1 = as.factor(c('a','b')), 
-  col.ref =c('AA','BB')
+  col.ref1 = c('AA','BB'),
+  col.ref2 = c('aaa','bbb')
 )
 print(df.ref)
 
@@ -118,4 +136,36 @@ library(plyr)
 ddply( df, .(col.1), summarize, sum.col.2 = sum(col.2), min.col.3 = min(col.3) )
 ```
 [top](#table-of-contents)
+
+### List Basics
+
+```{r list-basics}
+# Create a list.  The '.' function from the plyr library is handy for this.
+library(plyr)
+x = .(1, 2, "three", as.factor(4))
+str(x)
+# Subset the list
+x[1:3]
+# Subset the list to only include a specific element
+x[1]
+# Obtain element from list
+x[[1]]
+# Convert from list subset to vector of contained elements (assuming consistent element types)
+unlist( x[1:2] )
+# If a subset query matches no elements, then a list with NULL as its only element is returned
+x[5000]
+# However trying to access an element that does not exist is a error state
+tryCatch({
+    x[[5000]]
+  }
+  ,error=function(cond) {
+    print(cond)
+  }
+)
+```
+[top](#table-of-contents)
+
+
+
+
 
