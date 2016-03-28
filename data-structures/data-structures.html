@@ -162,7 +162,9 @@ $(document).ready(function () {
 </div>
 <div id="data-frame-basics" class="section level3">
 <h3>Data Frame Basics</h3>
-<pre class="r"><code>#Here is a data frame
+<pre class="r"><code>set.seed(1234) # Use same random data each time
+
+# Here is a data frame
 df = data.frame( 
   col.1 = as.factor(c('a','b','a','b')), 
   col.2 = rnorm(1:4), 
@@ -170,15 +172,15 @@ df = data.frame(
 )
 print(df)</code></pre>
 <pre><code>##   col.1      col.2 col.3
-## 1     a -0.4022058     5
-## 2     b -1.3553857     6
-## 3     a  0.3671352     7
-## 4     b  0.4960606     8</code></pre>
+## 1     a -1.2070657     5
+## 2     b  0.2774292     6
+## 3     a  1.0844412     7
+## 4     b -2.3456977     8</code></pre>
 <pre class="r"><code># An abbreviated view of the data frame.  Good for investigation of newly read/created data
 str(df)</code></pre>
 <pre><code>## 'data.frame':    4 obs. of  3 variables:
 ##  $ col.1: Factor w/ 2 levels &quot;a&quot;,&quot;b&quot;: 1 2 1 2
-##  $ col.2: num  -0.402 -1.355 0.367 0.496
+##  $ col.2: num  -1.207 0.277 1.084 -2.346
 ##  $ col.3: int  5 6 7 8</code></pre>
 <p><a href="#table-of-contents">top</a></p>
 <div id="get-rows-and-columns" class="section level4">
@@ -190,7 +192,7 @@ colnames(df)</code></pre>
 <pre><code>## [1] &quot;col.1&quot; &quot;col.2&quot; &quot;col.3&quot;</code></pre>
 <pre class="r"><code># Isolate a column
 print( df$col.2 )</code></pre>
-<pre><code>## [1] -0.4022058 -1.3553857  0.3671352  0.4960606</code></pre>
+<pre><code>## [1] -1.2070657  0.2774292  1.0844412 -2.3456977</code></pre>
 <pre class="r"><code># You may get/set the row names
 #   i.e. names of records 
 #   i.e. names of tuples 
@@ -199,8 +201,8 @@ rownames(df)</code></pre>
 <pre><code>## [1] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot;</code></pre>
 <pre class="r"><code># Isolate a row 
 print( df[1,] )</code></pre>
-<pre><code>##   col.1      col.2 col.3
-## 1     a -0.4022058     5</code></pre>
+<pre><code>##   col.1     col.2 col.3
+## 1     a -1.207066     5</code></pre>
 <p><a href="#table-of-contents">top</a></p>
 </div>
 <div id="add-rows-and-columns" class="section level4">
@@ -209,10 +211,10 @@ print( df[1,] )</code></pre>
 df$col.4 = NA
 print(df)</code></pre>
 <pre><code>##   col.1      col.2 col.3 col.4
-## 1     a -0.4022058     5    NA
-## 2     b -1.3553857     6    NA
-## 3     a  0.3671352     7    NA
-## 4     b  0.4960606     8    NA</code></pre>
+## 1     a -1.2070657     5    NA
+## 2     b  0.2774292     6    NA
+## 3     a  1.0844412     7    NA
+## 4     b -2.3456977     8    NA</code></pre>
 <pre class="r"><code># Adding rows is easy too. First, we will make some new rows
 df.more = data.frame( 
   col.1 = as.factor(c('a','b')), 
@@ -224,28 +226,28 @@ df.more = data.frame(
 # Now combine the rows, as in an SQL UNION
 rbind(df, df.more)</code></pre>
 <pre><code>##   col.1      col.2 col.3 col.4
-## 1     a -0.4022058     5  &lt;NA&gt;
-## 2     b -1.3553857     6  &lt;NA&gt;
-## 3     a  0.3671352     7  &lt;NA&gt;
-## 4     b  0.4960606     8  &lt;NA&gt;
-## 5     a -0.6496640     9   new
-## 6     b -1.4331346    10   new</code></pre>
+## 1     a -1.2070657     5  &lt;NA&gt;
+## 2     b  0.2774292     6  &lt;NA&gt;
+## 3     a  1.0844412     7  &lt;NA&gt;
+## 4     b -2.3456977     8  &lt;NA&gt;
+## 5     a  0.4291247     9   new
+## 6     b  0.5060559    10   new</code></pre>
 <p><a href="#table-of-contents">top</a></p>
 </div>
 <div id="filter-and-project" class="section level4">
 <h4>Filter and Project</h4>
 <pre class="r"><code># Create filtered subset of rows
 subset(df, df$col.1 == 'a')</code></pre>
-<pre><code>##   col.1      col.2 col.3 col.4
-## 1     a -0.4022058     5    NA
-## 3     a  0.3671352     7    NA</code></pre>
+<pre><code>##   col.1     col.2 col.3 col.4
+## 1     a -1.207066     5    NA
+## 3     a  1.084441     7    NA</code></pre>
 <pre class="r"><code># You may filter and project a data frame with [,]
 # From an SQL perspective, visualize it as dataframe[ WHERE, SELECT ]
 #
 df[ df$col.1 == 'a', ] # Note 2nd param in [,] is blank to indicate all variables</code></pre>
-<pre><code>##   col.1      col.2 col.3 col.4
-## 1     a -0.4022058     5    NA
-## 3     a  0.3671352     7    NA</code></pre>
+<pre><code>##   col.1     col.2 col.3 col.4
+## 1     a -1.207066     5    NA
+## 3     a  1.084441     7    NA</code></pre>
 <pre class="r"><code># Here it is again but with specific columns being projected
 df[ df$col.1 == 'a', c(&quot;col.1&quot;, &quot;col.3&quot;) ]</code></pre>
 <pre><code>##   col.1 col.3
@@ -257,22 +259,22 @@ df[ df$col.1 == 'a', c(&quot;col.1&quot;, &quot;col.3&quot;) ]</code></pre>
 <h4>Order By</h4>
 <pre class="r"><code># Recall you may access a row by its name, which by default is an integer sequence: 1, 2, ..., nrow
 print( df[1,] )</code></pre>
-<pre><code>##   col.1      col.2 col.3 col.4
-## 1     a -0.4022058     5    NA</code></pre>
+<pre><code>##   col.1     col.2 col.3 col.4
+## 1     a -1.207066     5    NA</code></pre>
 <pre class="r"><code># You may also access rows in order of your choice
 df[ nrow(df):1, ]</code></pre>
 <pre><code>##   col.1      col.2 col.3 col.4
-## 4     b  0.4960606     8    NA
-## 3     a  0.3671352     7    NA
-## 2     b -1.3553857     6    NA
-## 1     a -0.4022058     5    NA</code></pre>
+## 4     b -2.3456977     8    NA
+## 3     a  1.0844412     7    NA
+## 2     b  0.2774292     6    NA
+## 1     a -1.2070657     5    NA</code></pre>
 <pre class="r"><code># The order() function in base R takes column names (use '-' for descending)
 df[ order(df$col.1, -df$col.2), ]</code></pre>
 <pre><code>##   col.1      col.2 col.3 col.4
-## 3     a  0.3671352     7    NA
-## 1     a -0.4022058     5    NA
-## 4     b  0.4960606     8    NA
-## 2     b -1.3553857     6    NA</code></pre>
+## 3     a  1.0844412     7    NA
+## 1     a -1.2070657     5    NA
+## 2     b  0.2774292     6    NA
+## 4     b -2.3456977     8    NA</code></pre>
 <p><a href="#table-of-contents">top</a></p>
 </div>
 <div id="warning-with-brackets" class="section level4">
@@ -312,16 +314,16 @@ print(df.ref)</code></pre>
 library(plyr)
 join(df, df.ref, by=&quot;col.1&quot;)</code></pre>
 <pre><code>##   col.1      col.2 col.3 col.4 col.ref1 col.ref2
-## 1     a -0.4022058     5    NA       AA      aaa
-## 2     b -1.3553857     6    NA       BB      bbb
-## 3     a  0.3671352     7    NA       AA      aaa
-## 4     b  0.4960606     8    NA       BB      bbb</code></pre>
+## 1     a -1.2070657     5    NA       AA      aaa
+## 2     b  0.2774292     6    NA       BB      bbb
+## 3     a  1.0844412     7    NA       AA      aaa
+## 4     b -2.3456977     8    NA       BB      bbb</code></pre>
 <pre class="r"><code># We can also use the plyr library for GROUP BY operations on data projections
 library(plyr)
 ddply( df, .(col.1), summarize, sum.col.2 = sum(col.2), min.col.3 = min(col.3) )</code></pre>
-<pre><code>##   col.1   sum.col.2 min.col.3
-## 1     a -0.03507068         5
-## 2     b -0.85932512         6</code></pre>
+<pre><code>##   col.1  sum.col.2 min.col.3
+## 1     a -0.1226246         5
+## 2     b -2.0682685         6</code></pre>
 <p><a href="#table-of-contents">top</a></p>
 </div>
 </div>

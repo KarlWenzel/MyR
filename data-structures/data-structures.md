@@ -44,7 +44,9 @@
 ### Data Frame Basics
 
 ```r
-#Here is a data frame
+set.seed(1234) # Use same random data each time
+
+# Here is a data frame
 df = data.frame( 
   col.1 = as.factor(c('a','b','a','b')), 
   col.2 = rnorm(1:4), 
@@ -55,10 +57,10 @@ print(df)
 
 ```
 ##   col.1      col.2 col.3
-## 1     a -0.4022058     5
-## 2     b -1.3553857     6
-## 3     a  0.3671352     7
-## 4     b  0.4960606     8
+## 1     a -1.2070657     5
+## 2     b  0.2774292     6
+## 3     a  1.0844412     7
+## 4     b -2.3456977     8
 ```
 
 ```r
@@ -69,7 +71,7 @@ str(df)
 ```
 ## 'data.frame':	4 obs. of  3 variables:
 ##  $ col.1: Factor w/ 2 levels "a","b": 1 2 1 2
-##  $ col.2: num  -0.402 -1.355 0.367 0.496
+##  $ col.2: num  -1.207 0.277 1.084 -2.346
 ##  $ col.3: int  5 6 7 8
 ```
 [top](#table-of-contents)
@@ -93,7 +95,7 @@ print( df$col.2 )
 ```
 
 ```
-## [1] -0.4022058 -1.3553857  0.3671352  0.4960606
+## [1] -1.2070657  0.2774292  1.0844412 -2.3456977
 ```
 
 ```r
@@ -114,8 +116,8 @@ print( df[1,] )
 ```
 
 ```
-##   col.1      col.2 col.3
-## 1     a -0.4022058     5
+##   col.1     col.2 col.3
+## 1     a -1.207066     5
 ```
 [top](#table-of-contents)
 
@@ -129,10 +131,10 @@ print(df)
 
 ```
 ##   col.1      col.2 col.3 col.4
-## 1     a -0.4022058     5    NA
-## 2     b -1.3553857     6    NA
-## 3     a  0.3671352     7    NA
-## 4     b  0.4960606     8    NA
+## 1     a -1.2070657     5    NA
+## 2     b  0.2774292     6    NA
+## 3     a  1.0844412     7    NA
+## 4     b -2.3456977     8    NA
 ```
 
 ```r
@@ -150,12 +152,12 @@ rbind(df, df.more)
 
 ```
 ##   col.1      col.2 col.3 col.4
-## 1     a -0.4022058     5  <NA>
-## 2     b -1.3553857     6  <NA>
-## 3     a  0.3671352     7  <NA>
-## 4     b  0.4960606     8  <NA>
-## 5     a -0.6496640     9   new
-## 6     b -1.4331346    10   new
+## 1     a -1.2070657     5  <NA>
+## 2     b  0.2774292     6  <NA>
+## 3     a  1.0844412     7  <NA>
+## 4     b -2.3456977     8  <NA>
+## 5     a  0.4291247     9   new
+## 6     b  0.5060559    10   new
 ```
 [top](#table-of-contents)
 
@@ -167,9 +169,9 @@ subset(df, df$col.1 == 'a')
 ```
 
 ```
-##   col.1      col.2 col.3 col.4
-## 1     a -0.4022058     5    NA
-## 3     a  0.3671352     7    NA
+##   col.1     col.2 col.3 col.4
+## 1     a -1.207066     5    NA
+## 3     a  1.084441     7    NA
 ```
 
 ```r
@@ -180,9 +182,9 @@ df[ df$col.1 == 'a', ] # Note 2nd param in [,] is blank to indicate all variable
 ```
 
 ```
-##   col.1      col.2 col.3 col.4
-## 1     a -0.4022058     5    NA
-## 3     a  0.3671352     7    NA
+##   col.1     col.2 col.3 col.4
+## 1     a -1.207066     5    NA
+## 3     a  1.084441     7    NA
 ```
 
 ```r
@@ -205,8 +207,8 @@ print( df[1,] )
 ```
 
 ```
-##   col.1      col.2 col.3 col.4
-## 1     a -0.4022058     5    NA
+##   col.1     col.2 col.3 col.4
+## 1     a -1.207066     5    NA
 ```
 
 ```r
@@ -216,10 +218,10 @@ df[ nrow(df):1, ]
 
 ```
 ##   col.1      col.2 col.3 col.4
-## 4     b  0.4960606     8    NA
-## 3     a  0.3671352     7    NA
-## 2     b -1.3553857     6    NA
-## 1     a -0.4022058     5    NA
+## 4     b -2.3456977     8    NA
+## 3     a  1.0844412     7    NA
+## 2     b  0.2774292     6    NA
+## 1     a -1.2070657     5    NA
 ```
 
 ```r
@@ -229,10 +231,10 @@ df[ order(df$col.1, -df$col.2), ]
 
 ```
 ##   col.1      col.2 col.3 col.4
-## 3     a  0.3671352     7    NA
-## 1     a -0.4022058     5    NA
-## 4     b  0.4960606     8    NA
-## 2     b -1.3553857     6    NA
+## 3     a  1.0844412     7    NA
+## 1     a -1.2070657     5    NA
+## 2     b  0.2774292     6    NA
+## 4     b -2.3456977     8    NA
 ```
 [top](#table-of-contents)
 
@@ -295,10 +297,10 @@ join(df, df.ref, by="col.1")
 
 ```
 ##   col.1      col.2 col.3 col.4 col.ref1 col.ref2
-## 1     a -0.4022058     5    NA       AA      aaa
-## 2     b -1.3553857     6    NA       BB      bbb
-## 3     a  0.3671352     7    NA       AA      aaa
-## 4     b  0.4960606     8    NA       BB      bbb
+## 1     a -1.2070657     5    NA       AA      aaa
+## 2     b  0.2774292     6    NA       BB      bbb
+## 3     a  1.0844412     7    NA       AA      aaa
+## 4     b -2.3456977     8    NA       BB      bbb
 ```
 
 ```r
@@ -308,9 +310,9 @@ ddply( df, .(col.1), summarize, sum.col.2 = sum(col.2), min.col.3 = min(col.3) )
 ```
 
 ```
-##   col.1   sum.col.2 min.col.3
-## 1     a -0.03507068         5
-## 2     b -0.85932512         6
+##   col.1  sum.col.2 min.col.3
+## 1     a -0.1226246         5
+## 2     b -2.0682685         6
 ```
 [top](#table-of-contents)
 

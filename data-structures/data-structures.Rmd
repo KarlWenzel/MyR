@@ -50,7 +50,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ### Data Frame Basics
 ```{r data-frame-example}
-#Here is a data frame
+set.seed(1234) # Use same random data each time
+
+# Here is a data frame
 df = data.frame( 
   col.1 = as.factor(c('a','b','a','b')), 
   col.2 = rnorm(1:4), 
