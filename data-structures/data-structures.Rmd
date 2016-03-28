@@ -17,6 +17,7 @@ knitr::opts_chunk$set(echo = TRUE)
     - [Get Rows and Columns](#get-rows-and-columns)
     - [Add Rows and Columns](#add-rows-and-columns)
     - [Filter and Project](#filter-and-project)
+    - [Order By](#order-by)
     - [Warning with Brackets](#warning-with-brackets)
     - [Join and Aggregate](#join-and-aggregate)
 4. [Lists](#list-basics)
@@ -48,7 +49,6 @@ knitr::opts_chunk$set(echo = TRUE)
 [top](#table-of-contents)
 
 ### Data Frame Basics
-
 ```{r data-frame-example}
 #Here is a data frame
 df = data.frame( 
@@ -63,7 +63,6 @@ str(df)
 [top](#table-of-contents)
 
 #### Get Rows and Columns
-
 ```{r get-rows-and-cols}
 # You may get/set the column names 
 #   i.e. names of dimensions 
@@ -101,7 +100,6 @@ rbind(df, df.more)
 [top](#table-of-contents)
 
 #### Filter and Project
-
 ```{r filter-and-protect}
 
 # Create filtered subset of rows
@@ -113,6 +111,17 @@ subset(df, df$col.1 == 'a')
 df[ df$col.1 == 'a', ] # Note 2nd param in [,] is blank to indicate all variables
 # Here it is again but with specific columns being projected
 df[ df$col.1 == 'a', c("col.1", "col.3") ]
+```
+[top](#table-of-contents)
+
+#### Order By
+```{r order-by}
+# Recall you may access a row by its name, which by default is an integer sequence: 1, 2, ..., nrow
+print( df[1,] )
+# This means that you may access rows in order of your choice
+df[ nrow(df):1, ]
+# The order() function in base R takes column names (use '-' for descending)
+df[ order(df$col.1, -df$col.2), ]
 ```
 [top](#table-of-contents)
 

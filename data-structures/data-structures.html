@@ -122,6 +122,7 @@ $(document).ready(function () {
 <li><a href="#get-rows-and-columns">Get Rows and Columns</a></li>
 <li><a href="#add-rows-and-columns">Add Rows and Columns</a></li>
 <li><a href="#filter-and-project">Filter and Project</a></li>
+<li><a href="#order-by">Order By</a></li>
 <li><a href="#warning-with-brackets">Warning with Brackets</a></li>
 <li><a href="#join-and-aggregate">Join and Aggregate</a></li>
 </ul></li>
@@ -168,16 +169,16 @@ df = data.frame(
   col.3 = 5:8 
 )
 print(df)</code></pre>
-<pre><code>##   col.1       col.2 col.3
-## 1     a -0.60899513     5
-## 2     b -0.29201327     6
-## 3     a  0.56647824     7
-## 4     b  0.09076276     8</code></pre>
+<pre><code>##   col.1      col.2 col.3
+## 1     a -0.8413368     5
+## 2     b  0.4712396     6
+## 3     a  0.6818275     7
+## 4     b -0.1573945     8</code></pre>
 <pre class="r"><code># An abbreviated view of the data frame.  Good for investigation of newly read/created data
 str(df)</code></pre>
 <pre><code>## 'data.frame':    4 obs. of  3 variables:
 ##  $ col.1: Factor w/ 2 levels &quot;a&quot;,&quot;b&quot;: 1 2 1 2
-##  $ col.2: num  -0.609 -0.292 0.5665 0.0908
+##  $ col.2: num  -0.841 0.471 0.682 -0.157
 ##  $ col.3: int  5 6 7 8</code></pre>
 <p><a href="#table-of-contents">top</a></p>
 <div id="get-rows-and-columns" class="section level4">
@@ -189,7 +190,7 @@ colnames(df)</code></pre>
 <pre><code>## [1] &quot;col.1&quot; &quot;col.2&quot; &quot;col.3&quot;</code></pre>
 <pre class="r"><code># Isolate a column
 print( df$col.2 )</code></pre>
-<pre><code>## [1] -0.60899513 -0.29201327  0.56647824  0.09076276</code></pre>
+<pre><code>## [1] -0.8413368  0.4712396  0.6818275 -0.1573945</code></pre>
 <pre class="r"><code># You may get/set the row names
 #   i.e. names of records 
 #   i.e. names of tuples 
@@ -199,7 +200,7 @@ rownames(df)</code></pre>
 <pre class="r"><code># Isolate a row 
 print( df[1,] )</code></pre>
 <pre><code>##   col.1      col.2 col.3
-## 1     a -0.6089951     5</code></pre>
+## 1     a -0.8413368     5</code></pre>
 <p><a href="#table-of-contents">top</a></p>
 </div>
 <div id="add-rows-and-columns" class="section level4">
@@ -207,11 +208,11 @@ print( df[1,] )</code></pre>
 <pre class="r"><code># Adding a column is easy
 df$col.4 = NA
 print(df)</code></pre>
-<pre><code>##   col.1       col.2 col.3 col.4
-## 1     a -0.60899513     5    NA
-## 2     b -0.29201327     6    NA
-## 3     a  0.56647824     7    NA
-## 4     b  0.09076276     8    NA</code></pre>
+<pre><code>##   col.1      col.2 col.3 col.4
+## 1     a -0.8413368     5    NA
+## 2     b  0.4712396     6    NA
+## 3     a  0.6818275     7    NA
+## 4     b -0.1573945     8    NA</code></pre>
 <pre class="r"><code># Adding rows is easy too. First, we will make some new rows
 df.more = data.frame( 
   col.1 = as.factor(c('a','b')), 
@@ -222,13 +223,13 @@ df.more = data.frame(
 
 # Now combine the rows, as in an SQL UNION
 rbind(df, df.more)</code></pre>
-<pre><code>##   col.1       col.2 col.3 col.4
-## 1     a -0.60899513     5  &lt;NA&gt;
-## 2     b -0.29201327     6  &lt;NA&gt;
-## 3     a  0.56647824     7  &lt;NA&gt;
-## 4     b  0.09076276     8  &lt;NA&gt;
-## 5     a -1.81260909     9   new
-## 6     b -0.42322309    10   new</code></pre>
+<pre><code>##   col.1      col.2 col.3 col.4
+## 1     a -0.8413368     5  &lt;NA&gt;
+## 2     b  0.4712396     6  &lt;NA&gt;
+## 3     a  0.6818275     7  &lt;NA&gt;
+## 4     b -0.1573945     8  &lt;NA&gt;
+## 5     a  1.2782337     9   new
+## 6     b  1.5006055    10   new</code></pre>
 <p><a href="#table-of-contents">top</a></p>
 </div>
 <div id="filter-and-project" class="section level4">
@@ -236,20 +237,42 @@ rbind(df, df.more)</code></pre>
 <pre class="r"><code># Create filtered subset of rows
 subset(df, df$col.1 == 'a')</code></pre>
 <pre><code>##   col.1      col.2 col.3 col.4
-## 1     a -0.6089951     5    NA
-## 3     a  0.5664782     7    NA</code></pre>
+## 1     a -0.8413368     5    NA
+## 3     a  0.6818275     7    NA</code></pre>
 <pre class="r"><code># You may filter and project a data frame with [,]
 # From an SQL perspective, visualize it as dataframe[ WHERE, SELECT ]
 #
 df[ df$col.1 == 'a', ] # Note 2nd param in [,] is blank to indicate all variables</code></pre>
 <pre><code>##   col.1      col.2 col.3 col.4
-## 1     a -0.6089951     5    NA
-## 3     a  0.5664782     7    NA</code></pre>
+## 1     a -0.8413368     5    NA
+## 3     a  0.6818275     7    NA</code></pre>
 <pre class="r"><code># Here it is again but with specific columns being projected
 df[ df$col.1 == 'a', c(&quot;col.1&quot;, &quot;col.3&quot;) ]</code></pre>
 <pre><code>##   col.1 col.3
 ## 1     a     5
 ## 3     a     7</code></pre>
+<p><a href="#table-of-contents">top</a></p>
+</div>
+<div id="order-by" class="section level4">
+<h4>Order By</h4>
+<pre class="r"><code># Recall you may access a row by its name, which by default is an integer sequence: 1, 2, ..., nrow
+print( df[1,] )</code></pre>
+<pre><code>##   col.1      col.2 col.3 col.4
+## 1     a -0.8413368     5    NA</code></pre>
+<pre class="r"><code># This means that you may access rows in order of your choice
+df[ nrow(df):1, ]</code></pre>
+<pre><code>##   col.1      col.2 col.3 col.4
+## 4     b -0.1573945     8    NA
+## 3     a  0.6818275     7    NA
+## 2     b  0.4712396     6    NA
+## 1     a -0.8413368     5    NA</code></pre>
+<pre class="r"><code># The order() function in base R takes column names (use '-' for descending)
+df[ order(df$col.1, -df$col.2), ]</code></pre>
+<pre><code>##   col.1      col.2 col.3 col.4
+## 3     a  0.6818275     7    NA
+## 1     a -0.8413368     5    NA
+## 2     b  0.4712396     6    NA
+## 4     b -0.1573945     8    NA</code></pre>
 <p><a href="#table-of-contents">top</a></p>
 </div>
 <div id="warning-with-brackets" class="section level4">
@@ -288,17 +311,17 @@ print(df.ref)</code></pre>
 <pre class="r"><code># Using the plyr library we can JOIN the reference data to the original data
 library(plyr)
 join(df, df.ref, by=&quot;col.1&quot;)</code></pre>
-<pre><code>##   col.1       col.2 col.3 col.4 col.ref1 col.ref2
-## 1     a -0.60899513     5    NA       AA      aaa
-## 2     b -0.29201327     6    NA       BB      bbb
-## 3     a  0.56647824     7    NA       AA      aaa
-## 4     b  0.09076276     8    NA       BB      bbb</code></pre>
+<pre><code>##   col.1      col.2 col.3 col.4 col.ref1 col.ref2
+## 1     a -0.8413368     5    NA       AA      aaa
+## 2     b  0.4712396     6    NA       BB      bbb
+## 3     a  0.6818275     7    NA       AA      aaa
+## 4     b -0.1573945     8    NA       BB      bbb</code></pre>
 <pre class="r"><code># We can also use the plyr library for GROUP BY operations on data projections
 library(plyr)
 ddply( df, .(col.1), summarize, sum.col.2 = sum(col.2), min.col.3 = min(col.3) )</code></pre>
-<pre><code>##   col.1   sum.col.2 min.col.3
-## 1     a -0.04251689         5
-## 2     b -0.20125051         6</code></pre>
+<pre><code>##   col.1  sum.col.2 min.col.3
+## 1     a -0.1595093         5
+## 2     b  0.3138451         6</code></pre>
 <p><a href="#table-of-contents">top</a></p>
 </div>
 </div>
@@ -341,7 +364,7 @@ x[5000]</code></pre>
 ##  $ NULL: NULL
 ##  - attr(*, &quot;env&quot;)=&lt;environment: R_GlobalEnv&gt; 
 ##  - attr(*, &quot;class&quot;)= chr &quot;quoted&quot;</code></pre>
-<pre class="r"><code># However trying to access an element that does not exist is a error state
+<pre class="r"><code># However trying to access an element that does not exist is an error state
 tryCatch({
     x[[5000]]
   }

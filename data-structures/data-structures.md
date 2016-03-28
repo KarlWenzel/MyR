@@ -10,6 +10,7 @@
     - [Get Rows and Columns](#get-rows-and-columns)
     - [Add Rows and Columns](#add-rows-and-columns)
     - [Filter and Project](#filter-and-project)
+    - [Order By](#order-by)
     - [Warning with Brackets](#warning-with-brackets)
     - [Join and Aggregate](#join-and-aggregate)
 4. [Lists](#list-basics)
@@ -42,7 +43,6 @@
 
 ### Data Frame Basics
 
-
 ```r
 #Here is a data frame
 df = data.frame( 
@@ -54,11 +54,11 @@ print(df)
 ```
 
 ```
-##   col.1       col.2 col.3
-## 1     a -0.60899513     5
-## 2     b -0.29201327     6
-## 3     a  0.56647824     7
-## 4     b  0.09076276     8
+##   col.1      col.2 col.3
+## 1     a -0.8413368     5
+## 2     b  0.4712396     6
+## 3     a  0.6818275     7
+## 4     b -0.1573945     8
 ```
 
 ```r
@@ -69,13 +69,12 @@ str(df)
 ```
 ## 'data.frame':	4 obs. of  3 variables:
 ##  $ col.1: Factor w/ 2 levels "a","b": 1 2 1 2
-##  $ col.2: num  -0.609 -0.292 0.5665 0.0908
+##  $ col.2: num  -0.841 0.471 0.682 -0.157
 ##  $ col.3: int  5 6 7 8
 ```
 [top](#table-of-contents)
 
 #### Get Rows and Columns
-
 
 ```r
 # You may get/set the column names 
@@ -94,7 +93,7 @@ print( df$col.2 )
 ```
 
 ```
-## [1] -0.60899513 -0.29201327  0.56647824  0.09076276
+## [1] -0.8413368  0.4712396  0.6818275 -0.1573945
 ```
 
 ```r
@@ -116,7 +115,7 @@ print( df[1,] )
 
 ```
 ##   col.1      col.2 col.3
-## 1     a -0.6089951     5
+## 1     a -0.8413368     5
 ```
 [top](#table-of-contents)
 
@@ -129,11 +128,11 @@ print(df)
 ```
 
 ```
-##   col.1       col.2 col.3 col.4
-## 1     a -0.60899513     5    NA
-## 2     b -0.29201327     6    NA
-## 3     a  0.56647824     7    NA
-## 4     b  0.09076276     8    NA
+##   col.1      col.2 col.3 col.4
+## 1     a -0.8413368     5    NA
+## 2     b  0.4712396     6    NA
+## 3     a  0.6818275     7    NA
+## 4     b -0.1573945     8    NA
 ```
 
 ```r
@@ -150,18 +149,17 @@ rbind(df, df.more)
 ```
 
 ```
-##   col.1       col.2 col.3 col.4
-## 1     a -0.60899513     5  <NA>
-## 2     b -0.29201327     6  <NA>
-## 3     a  0.56647824     7  <NA>
-## 4     b  0.09076276     8  <NA>
-## 5     a -1.81260909     9   new
-## 6     b -0.42322309    10   new
+##   col.1      col.2 col.3 col.4
+## 1     a -0.8413368     5  <NA>
+## 2     b  0.4712396     6  <NA>
+## 3     a  0.6818275     7  <NA>
+## 4     b -0.1573945     8  <NA>
+## 5     a  1.2782337     9   new
+## 6     b  1.5006055    10   new
 ```
 [top](#table-of-contents)
 
 #### Filter and Project
-
 
 ```r
 # Create filtered subset of rows
@@ -170,8 +168,8 @@ subset(df, df$col.1 == 'a')
 
 ```
 ##   col.1      col.2 col.3 col.4
-## 1     a -0.6089951     5    NA
-## 3     a  0.5664782     7    NA
+## 1     a -0.8413368     5    NA
+## 3     a  0.6818275     7    NA
 ```
 
 ```r
@@ -183,8 +181,8 @@ df[ df$col.1 == 'a', ] # Note 2nd param in [,] is blank to indicate all variable
 
 ```
 ##   col.1      col.2 col.3 col.4
-## 1     a -0.6089951     5    NA
-## 3     a  0.5664782     7    NA
+## 1     a -0.8413368     5    NA
+## 3     a  0.6818275     7    NA
 ```
 
 ```r
@@ -196,6 +194,45 @@ df[ df$col.1 == 'a', c("col.1", "col.3") ]
 ##   col.1 col.3
 ## 1     a     5
 ## 3     a     7
+```
+[top](#table-of-contents)
+
+#### Order By
+
+```r
+# Recall you may access a row by its name, which by default is an integer sequence: 1, 2, ..., nrow
+print( df[1,] )
+```
+
+```
+##   col.1      col.2 col.3 col.4
+## 1     a -0.8413368     5    NA
+```
+
+```r
+# This means that you may access rows in order of your choice
+df[ nrow(df):1, ]
+```
+
+```
+##   col.1      col.2 col.3 col.4
+## 4     b -0.1573945     8    NA
+## 3     a  0.6818275     7    NA
+## 2     b  0.4712396     6    NA
+## 1     a -0.8413368     5    NA
+```
+
+```r
+# The order() function in base R takes column names (use '-' for descending)
+df[ order(df$col.1, -df$col.2), ]
+```
+
+```
+##   col.1      col.2 col.3 col.4
+## 3     a  0.6818275     7    NA
+## 1     a -0.8413368     5    NA
+## 2     b  0.4712396     6    NA
+## 4     b -0.1573945     8    NA
 ```
 [top](#table-of-contents)
 
@@ -257,11 +294,11 @@ join(df, df.ref, by="col.1")
 ```
 
 ```
-##   col.1       col.2 col.3 col.4 col.ref1 col.ref2
-## 1     a -0.60899513     5    NA       AA      aaa
-## 2     b -0.29201327     6    NA       BB      bbb
-## 3     a  0.56647824     7    NA       AA      aaa
-## 4     b  0.09076276     8    NA       BB      bbb
+##   col.1      col.2 col.3 col.4 col.ref1 col.ref2
+## 1     a -0.8413368     5    NA       AA      aaa
+## 2     b  0.4712396     6    NA       BB      bbb
+## 3     a  0.6818275     7    NA       AA      aaa
+## 4     b -0.1573945     8    NA       BB      bbb
 ```
 
 ```r
@@ -271,9 +308,9 @@ ddply( df, .(col.1), summarize, sum.col.2 = sum(col.2), min.col.3 = min(col.3) )
 ```
 
 ```
-##   col.1   sum.col.2 min.col.3
-## 1     a -0.04251689         5
-## 2     b -0.20125051         6
+##   col.1  sum.col.2 min.col.3
+## 1     a -0.1595093         5
+## 2     b  0.3138451         6
 ```
 [top](#table-of-contents)
 
@@ -354,7 +391,7 @@ x[5000]
 ```
 
 ```r
-# However trying to access an element that does not exist is a error state
+# However trying to access an element that does not exist is an error state
 tryCatch({
     x[[5000]]
   }
