@@ -9,6 +9,7 @@
 3. [Data Frames](#data-frame-basics)
     - [Get Rows and Columns](#get-rows-and-columns)
     - [Add Rows and Columns](#add-rows-and-columns)
+    - [Change Columns](#change-columns)
     - [Filter and Project](#filter-and-project)
     - [Order By](#order-by)
     - [Warning with Brackets](#warning-with-brackets)
@@ -90,7 +91,7 @@ colnames(df)
 ```
 
 ```r
-# Isolate a column
+# Isolate a column, NOTE that this yields a vector (array of homogenous type)
 print( df$col.2 )
 ```
 
@@ -111,7 +112,7 @@ rownames(df)
 ```
 
 ```r
-# Isolate a row 
+# Isolate a row , NOTE that this yields a data.frame (with only one row)
 print( df[1,] )
 ```
 
@@ -158,6 +159,37 @@ rbind(df, df.more)
 ## 4     b -2.3456977     8  <NA>
 ## 5     a  0.4291247     9   new
 ## 6     b  0.5060559    10   new
+```
+[top](#table-of-contents)
+
+#### Change Columns
+
+```r
+# Currently df$col.1 is a factor vector. Lets change it to a character vector
+df$col.1 = as.character(df$col.1)
+str(df)
+```
+
+```
+## 'data.frame':	4 obs. of  4 variables:
+##  $ col.1: chr  "a" "b" "a" "b"
+##  $ col.2: num  -1.207 0.277 1.084 -2.346
+##  $ col.3: int  5 6 7 8
+##  $ col.4: logi  NA NA NA NA
+```
+
+```r
+# Now change df$col.1 back to a vector using a different syntax
+df = transform(df, col.1 = as.factor(col.1))
+str(df)
+```
+
+```
+## 'data.frame':	4 obs. of  4 variables:
+##  $ col.1: Factor w/ 2 levels "a","b": 1 2 1 2
+##  $ col.2: num  -1.207 0.277 1.084 -2.346
+##  $ col.3: int  5 6 7 8
+##  $ col.4: logi  NA NA NA NA
 ```
 [top](#table-of-contents)
 

@@ -1,0 +1,268 @@
+---
+title: "Plotting"
+output: 
+  html_document:
+    keep_md: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Table of Contents
+
+1. [Table of Contents](#table-of-contents)
+2. [Base Plot System](#base-plot-system)
+    - [Base Histogram](#base-histogram)
+    - [Base Scatterplot](#base-scatterplot)
+          - [Scatterplot with Colors](#scatterplot-with-colors)
+          - [Scatterplot with Regression Line](#scatterplot-with-regression-line)
+    - [Base Boxplot](#base-boxplot)
+    - [Multiple Base Plots](#multiple-base-plots)
+3. [Plotting to Devices](#plotting-to-devices)
+4. [ggplot2](#ggplot2)
+    - [qplot](#qplot)
+    - [ggplot](#ggplot)
+
+### Base Plot System
+
+Basic plotting methods:
+
+- `hist()`
+- `plot()`
+- `boxplot()`
+- and multiple helpers, like `lines(), points(), text(), title(), mtext(), axis()`
+
+Key plot parameters
+
+- `pch` (i.e. "plot char")
+- `lty` (i.e. "line type")
+- `lwd` (i.e. "line width")
+- `col` (i.e. "color")
+- `xlab` (i.e. x-axis label)
+- `ylab` (i.e. y-axis label)
+    
+```{r basics}
+# We will use the airquality data frame for our plotting purposes
+library(datasets)
+df.AQ = airquality # Short names for data.frames are much nicer
+str( df.AQ )
+```
+
+[top](#table-of-contents)
+
+#### Base Histogram
+
+```{r base-histogram}
+# Draw a histogram
+hist( df.AQ$Ozone )
+```
+
+[top](#table-of-contents)
+
+#### Base Scatterplot
+
+```{r base-scatterplot}
+# Draw a scatterplot
+plot( df.AQ$Wind, df.AQ$Ozone )
+title( main = "Ozone and Wind in New York City" )
+```
+
+[top](#table-of-contents)
+
+#### Scatterplot with Colors
+
+```{r scatter-with-col}
+# Create a logical vector to be used as a filter momentarily
+is5 = ( df.AQ$Month == 5 )
+
+# Draw a scatterplot again
+#   note that type="n" sets up the plot, but does not draw points
+plot( df.AQ$Wind, df.AQ$Ozone, main="Ozone and Wind in NYC", type="n" )
+points( df.AQ[is5,]$Wind, df.AQ[is5,]$Ozone, col="blue" )
+points( df.AQ[!is5,]$Wind, df.AQ[!is5,]$Ozone, col="red" )
+legend("topright", pch=1, col=c("blue", "red"), legend=c("May", "Other Months"))
+```
+
+[top](#table-of-contents)
+
+#### Scatterplot with Regression Line
+
+``` {r scatter-with-reg}
+# Draw a scatterplot with regression line
+plot( df.AQ$Wind, df.AQ$Ozone, main="Ozone and Wind in NYC", pch=20 ) 
+model = lm( Ozone ~ Wind, df.AQ )
+abline( model, lwd=2 )
+```
+
+[top](#table-of-contents)
+
+#### Base Boxplot
+
+```{r base-boxplot}
+# Draw a boxplot
+df.AQ$Month = as.factor( df.AQ$Month )
+boxplot( Ozone ~ Month, df.AQ, xlab="Month", ylab="Ozone (ppb)" )
+```
+
+[top](#table-of-contents)
+
+#### Multiple Base Plots
+
+```{r multi-base}
+# Draw multiple plots on single device
+par( mfrow = c(1,2) )
+plot( df.AQ$Wind, df.AQ$Ozone, main="Ozone and Wind" )
+plot( df.AQ$Solar.R, df.AQ$Ozone, main="Ozone and Solar Radiation" )
+
+# Set parameter back to single plot
+par( mfrow = c(1,1) )
+```
+
+[top](#table-of-contents)
+
+### Plotting to Devices
+
+It is possible to manage multiple devices for plotting
+
+- To manage multiple devices, use dev.cur() and dev.set()
+- To copy between devices, dev.copy() and dev.copy2pdf()
+    
+```{r plot-to-dev}
+
+# Draw to a file graphics device instead of default screen graphics device
+pdf( file="example.pdf" )
+x = rnorm(100)
+hist(x)
+print( dev.cur() )
+
+dev.off() #closes file device
+```
+The PDF is [here.](#example.pdf)
+
+[top](#table-of-contents)
+
+### ggplot2
+
+1. Two main functions: 
+
+    - `qplot()`
+    - `ggplot()`
+    
+2. Main parameters:
+
+    - data, generally a data.frame
+    - aesthetic mappings
+    - geoms (e.g. points, lines, shapes)
+    - facets
+    - stats (e.g. binning, quantiles, smoothing)
+    - scales
+    - coord systems
+    - labels (e.g. `xlab(), ylab(), ggtitle()`_
+    - themes
+        - `theme()` for global tweaking
+        - general themes e.g. `theme_gray(), theme_bw(), ` ... etc.
+        
+3. Build using layers:
+
+    - plot data
+    - overlay summary
+    - metadata and annotation
+
+```{r my-ggplot2}
+# SEE http://ggplot2.org
+
+library(ggplot2) # comes with mpg data set
+str(mpg)
+```
+
+[top](#table-of-contents)
+
+#### qplot
+
+```{r qplot-basics}
+p <- qplot(displ, hwy, data = mpg)
+print(p)
+
+p <- qplot(displ, hwy, data = mpg, color=drv)
+print(p)
+
+# add a "smoother" for 95% confidence interval
+p <- qplot(displ, hwy, data = mpg, geom = c("point", "smooth"))
+print(p)
+
+# histogram (single dim, but still color code subsets within data points)
+p <- qplot(hwy, data = mpg, fill=drv)
+print(p)
+
+# histogram with facets i.e. panels. (columns ~ rows).. '.' menas
+p <- qplot(displ, hwy, data = mpg, facets = . ~ drv)
+print(p)
+
+#p <- qplot(hwy, data = mpg, facets = drv ~ ., binwidth=2)
+print(p)
+```
+
+[top](#table-of-contents)
+
+#### ggplot
+
+```{r qqplot-basics}
+# We will use the airquality dataset for this portion
+library(datasets)
+df.AQ = airquality
+df.AQ$Month = as.factor(df.AQ$Month)
+str( df.AQ )
+
+# no actual plot yet, but still has cool summary
+p = ggplot( data = df.AQ, aes(Wind,Ozone) )
+summary(p)
+
+# now we added a plot
+p = ggplot( data = df.AQ, aes(Wind,Ozone) )  
+p = p + geom_point()
+print(p)
+
+# add a smoother now
+p = ggplot( data = df.AQ, aes(Wind,Ozone) )  
+p = p + geom_point()   
+p = p + geom_smooth(method = "lm")
+print(p)
+
+# now add facets (by month, i.e. condition our plot by month)
+p = ggplot( data = df.AQ, aes(Wind,Ozone) )  
+p = p + geom_point()   
+p = p + geom_smooth(method = "lm")  
+p = p + facet_grid(. ~ Month)
+print(p)
+
+# add manual limits for fun
+p = ggplot( data = df.AQ, aes(Wind,Ozone) )  
+p = p + geom_point()   
+p = p + geom_smooth(method = "lm")  
+p = p + facet_grid(. ~ Month)  
+p = p + ylim(-10, 50)
+print(p)
+
+# how to condition (i.e. add facets) for continuous data?  use the cut() function to add column
+# lets condition on Temp instead of Month
+cutpoints <- quantile(df.AQ$Temp, seq(0,1, length=4), na.rm=TRUE)
+df.AQ$TempDec <- cut(df.AQ$Temp, cutpoints)
+levels(df.AQ$TempDec)
+
+# now we can plot
+p = ggplot( data = df.AQ, aes(Wind,Ozone) )  
+p = p + geom_point()   
+p = p + geom_smooth(method = "lm")  
+p = p + facet_grid(. ~ Month)
+print(p)
+
+# hell, lets make a 2 dimensional facet and condition on month and tempurature decile
+p = ggplot( data = df.AQ, aes(Wind,Ozone) )  
+p = p + geom_point()   
+p = p + geom_smooth(method = "lm")  
+p = p + facet_grid(Month ~ TempDec)
+print(p)
+```
+
+[top](#table-of-contents)

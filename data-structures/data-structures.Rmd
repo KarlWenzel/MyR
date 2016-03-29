@@ -16,6 +16,7 @@ knitr::opts_chunk$set(echo = TRUE)
 3. [Data Frames](#data-frame-basics)
     - [Get Rows and Columns](#get-rows-and-columns)
     - [Add Rows and Columns](#add-rows-and-columns)
+    - [Change Columns](#change-columns)
     - [Filter and Project](#filter-and-project)
     - [Order By](#order-by)
     - [Warning with Brackets](#warning-with-brackets)
@@ -70,14 +71,14 @@ str(df)
 #   i.e. names of dimensions 
 #   i.e. names of sample variables
 colnames(df)
-# Isolate a column
+# Isolate a column, NOTE that this yields a vector (array of homogenous type)
 print( df$col.2 )
 # You may get/set the row names
 #   i.e. names of records 
 #   i.e. names of tuples 
 #   i.e. names of sample observations
 rownames(df)
-# Isolate a row 
+# Isolate a row , NOTE that this yields a data.frame (with only one row)
 print( df[1,] )
 ```
 [top](#table-of-contents)
@@ -98,6 +99,17 @@ df.more = data.frame(
 
 # Now combine the rows, as in an SQL UNION
 rbind(df, df.more)
+```
+[top](#table-of-contents)
+
+#### Change Columns
+```{r change-columns}
+# Currently df$col.1 is a factor vector. Lets change it to a character vector
+df$col.1 = as.character(df$col.1)
+str(df)
+# Now change df$col.1 back to a vector using a different syntax
+df = transform(df, col.1 = as.factor(col.1))
+str(df)
 ```
 [top](#table-of-contents)
 
