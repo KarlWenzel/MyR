@@ -2,21 +2,6 @@
 
 
 
-### Table of Contents
-
-1. [Table of Contents](#table-of-contents)
-2. [Base Plot System](#base-plot-system)
-    - [Base Histogram](#base-histogram)
-    - [Base Scatterplot](#base-scatterplot)
-          - [Scatterplot with Colors](#scatterplot-with-colors)
-          - [Scatterplot with Regression Line](#scatterplot-with-regression-line)
-    - [Base Boxplot](#base-boxplot)
-    - [Multiple Base Plots](#multiple-base-plots)
-3. [Plotting to Devices](#plotting-to-devices)
-4. [ggplot2](#ggplot2)
-    - [qplot](#qplot)
-    - [ggplot](#ggplot)
-
 ### Base Plot System
 
 Basic plotting methods:
@@ -28,18 +13,21 @@ Basic plotting methods:
 
 Key plot parameters
 
-- `pch` (i.e. "plot char")
-- `lty` (i.e. "line type")
-- `lwd` (i.e. "line width")
-- `col` (i.e. "color")
+- `pch` (i.e. plot char) [pch values](./pch.png)
+- `lty` (i.e. line type)
+- `lwd` (i.e. line width)
+- `col` (i.e. color)
 - `xlab` (i.e. x-axis label)
 - `ylab` (i.e. y-axis label)
+
+Values for pch:
+
     
 
 ```r
 # We will use the airquality data frame for our plotting purposes
 library(datasets)
-df.AQ = airquality # Short names for data.frames are much nicer
+df.AQ = airquality # Short names for data frames are much nicer
 str( df.AQ )
 ```
 
@@ -53,7 +41,7 @@ str( df.AQ )
 ##  $ Day    : int  1 2 3 4 5 6 7 8 9 10 ...
 ```
 
-[top](#table-of-contents)
+[top](#header)
 
 #### Base Histogram
 
@@ -190,7 +178,7 @@ The PDF is [here.](#example.pdf)
     - data, generally a data.frame
     - aesthetic mappings
     - geoms (e.g. points, lines, shapes)
-    - facets
+    - facets (i.e. condition)
     - stats (e.g. binning, quantiles, smoothing)
     - scales
     - coord systems
@@ -207,10 +195,9 @@ The PDF is [here.](#example.pdf)
 
 
 ```r
-# SEE http://ggplot2.org
-
 library(ggplot2) # comes with mpg data set
-str(mpg)
+df.MPG = mpg     # make a copy to play with, using our preferred naming convention
+str(df.MPG)
 ```
 
 ```
@@ -234,14 +221,16 @@ str(mpg)
 
 
 ```r
-p <- qplot(displ, hwy, data = mpg)
+# Scatterplot
+p <- qplot(displ, hwy, data = df.MPG)
 print(p)
 ```
 
 ![](plotting_files/figure-html/qplot-basics-1.png)
 
 ```r
-p <- qplot(displ, hwy, data = mpg, color=drv)
+# Scatterplot with color codes based on type of drive
+p <- qplot(displ, hwy, data = df.MPG, color=drv)
 print(p)
 ```
 
@@ -249,38 +238,44 @@ print(p)
 
 ```r
 # add a "smoother" for 95% confidence interval
-p <- qplot(displ, hwy, data = mpg, geom = c("point", "smooth"))
+p <- qplot(displ, hwy, data = df.MPG, geom = c("point", "smooth"))
 print(p)
 ```
 
 ![](plotting_files/figure-html/qplot-basics-3.png)
 
 ```r
-# histogram (single dim, but still color code subsets within data points)
-p <- qplot(hwy, data = mpg, fill=drv)
+# Histogram (inferred by single dimension provided)
+#   For all of these histograms, specify a binwidth of bins to avoid warning
+p <- qplot(hwy, data = df.MPG, binwidth=2)
 print(p)
-```
-
-```
-## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
 ![](plotting_files/figure-html/qplot-basics-4.png)
 
 ```r
-# histogram with facets i.e. panels. (columns ~ rows).. '.' menas
-p <- qplot(displ, hwy, data = mpg, facets = . ~ drv)
+# Histogram with color coding of subsets
+p <- qplot(hwy, data = df.MPG, binwidth=2, fill=drv)
 print(p)
 ```
 
 ![](plotting_files/figure-html/qplot-basics-5.png)
 
 ```r
-#p <- qplot(hwy, data = mpg, facets = drv ~ ., binwidth=2)
+# histogram with facets i.e. panels, in this case spanning HORIZONTALLY
+p <- qplot(hwy, data = df.MPG, binwidth=2, fill=drv, facets = . ~ drv)
 print(p)
 ```
 
 ![](plotting_files/figure-html/qplot-basics-6.png)
+
+```r
+# histogram with facets i.e. panels, in this case spanning VERTICALLY
+p <- qplot(hwy, data = df.MPG, binwidth=2, fill=drv, facets = drv ~ .)
+print(p)
+```
+
+![](plotting_files/figure-html/qplot-basics-7.png)
 
 [top](#table-of-contents)
 
@@ -384,7 +379,7 @@ print(p)
 ![](plotting_files/figure-html/qqplot-basics-4.png)
 
 ```r
-# how to condition (i.e. add facets) for continuous data?  use the cut() function to add column
+# How to condition (i.e. add facets) for continuous data?  use the cut() function to add column
 # lets condition on Temp instead of Month
 cutpoints <- quantile(df.AQ$Temp, seq(0,1, length=4), na.rm=TRUE)
 df.AQ$TempDec <- cut(df.AQ$Temp, cutpoints)
@@ -396,7 +391,7 @@ levels(df.AQ$TempDec)
 ```
 
 ```r
-# now we can plot
+# Now we can plot
 p = ggplot( data = df.AQ, aes(Wind,Ozone) )  
 p = p + geom_point()   
 p = p + geom_smooth(method = "lm")  
@@ -415,7 +410,7 @@ print(p)
 ![](plotting_files/figure-html/qqplot-basics-5.png)
 
 ```r
-# hell, lets make a 2 dimensional facet and condition on month and tempurature decile
+# Create a 2-dimensional facet and condition on month and tempurature decile
 p = ggplot( data = df.AQ, aes(Wind,Ozone) )  
 p = p + geom_point()   
 p = p + geom_smooth(method = "lm")  

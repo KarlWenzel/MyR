@@ -2,27 +2,14 @@
 title: "Data Structures"
 output: 
   html_document:
-    keep_md: true
+    keep_md: yes
+    toc: yes
+    toc_depth: 4
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
-### Table of Contents
-
-1. [Table of Contents](#table-of-contents)
-2. [Basics](#some-basics)
-3. [Data Frames](#data-frame-basics)
-    - [Get Rows and Columns](#get-rows-and-columns)
-    - [Add Rows and Columns](#add-rows-and-columns)
-    - [Change Columns](#change-columns)
-    - [Filter and Project](#filter-and-project)
-    - [Order By](#order-by)
-    - [Warning with Brackets](#warning-with-brackets)
-    - [Join and Aggregate](#join-and-aggregate)
-4. [Lists](#list-basics)
-
 
 ### Some Basics
 
@@ -47,7 +34,7 @@ knitr::opts_chunk$set(echo = TRUE)
     - From data frame to **array**: gets treated like 2d **matrices**
     - From data frame to **list** : gets treated like a **list of vectors**
 
-[top](#table-of-contents)
+[top](#header)
 
 ### Data Frame Basics
 ```{r data-frame-example}
@@ -63,7 +50,7 @@ print(df)
 # An abbreviated view of the data frame.  Good for investigation of newly read/created data
 str(df)
 ```
-[top](#table-of-contents)
+[top](#header)
 
 #### Get Rows and Columns
 ```{r get-rows-and-cols}
@@ -81,7 +68,7 @@ rownames(df)
 # Isolate a row , NOTE that this yields a data.frame (with only one row)
 print( df[1,] )
 ```
-[top](#table-of-contents)
+[top](#header)
 
 #### Add Rows and Columns
 ```{r add-rows-and-cols}
@@ -100,7 +87,7 @@ df.more = data.frame(
 # Now combine the rows, as in an SQL UNION
 rbind(df, df.more)
 ```
-[top](#table-of-contents)
+[top](#header)
 
 #### Change Columns
 ```{r change-columns}
@@ -111,7 +98,7 @@ str(df)
 df = transform(df, col.1 = as.factor(col.1))
 str(df)
 ```
-[top](#table-of-contents)
+[top](#header)
 
 #### Filter and Project
 ```{r filter-and-protect}
@@ -126,7 +113,7 @@ df[ df$col.1 == 'a', ] # Note 2nd param in [,] is blank to indicate all variable
 # Here it is again but with specific columns being projected
 df[ df$col.1 == 'a', c("col.1", "col.3") ]
 ```
-[top](#table-of-contents)
+[top](#header)
 
 #### Order By
 ```{r order-by}
@@ -137,7 +124,7 @@ df[ nrow(df):1, ]
 # The order() function in base R takes column names (use '-' for descending)
 df[ order(df$col.1, -df$col.2), ]
 ```
-[top](#table-of-contents)
+[top](#header)
 
 #### Warning with Brackets
 ```{r brackets}
@@ -149,7 +136,7 @@ df[1]
 # May also use a column name as a key
 df["col.1"]
 ```
-[top](#table-of-contents)
+[top](#header)
 
 #### Join and Aggregate
 
@@ -171,7 +158,7 @@ join(df, df.ref, by="col.1")
 library(plyr)
 ddply( df, .(col.1), summarize, sum.col.2 = sum(col.2), min.col.3 = min(col.3) )
 ```
-[top](#table-of-contents)
+[top](#header)
 
 ### List Basics
 
@@ -186,8 +173,8 @@ x[1:3]
 x[1]
 # Obtain element from list
 x[[1]] # equivalent to unlist(x[1]), see below
-# Convert from list subset to vector of contained elements (assuming consistent element types)
-unlist( x[1:2] )
+# Convert from list subset to vector of contained elements (with coercion)
+unlist( x[1:3] )
 # If a subset query matches no elements, then a list with NULL as its only element is returned
 x[5000]
 # However trying to access an element that does not exist is an error state
@@ -199,7 +186,7 @@ tryCatch({
   }
 )
 ```
-[top](#table-of-contents)
+[top](#header)
 
 
 

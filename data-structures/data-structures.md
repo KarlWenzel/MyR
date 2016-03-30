@@ -2,21 +2,6 @@
 
 
 
-### Table of Contents
-
-1. [Table of Contents](#table-of-contents)
-2. [Basics](#some-basics)
-3. [Data Frames](#data-frame-basics)
-    - [Get Rows and Columns](#get-rows-and-columns)
-    - [Add Rows and Columns](#add-rows-and-columns)
-    - [Change Columns](#change-columns)
-    - [Filter and Project](#filter-and-project)
-    - [Order By](#order-by)
-    - [Warning with Brackets](#warning-with-brackets)
-    - [Join and Aggregate](#join-and-aggregate)
-4. [Lists](#list-basics)
-
-
 ### Some Basics
 
 1. Types of **atomic vectors** (see [more](http://arrgh.tim-smith.us/atomic.html) on **vectors** from Tim Smith's page)
@@ -40,7 +25,7 @@
     - From data frame to **array**: gets treated like 2d **matrices**
     - From data frame to **list** : gets treated like a **list of vectors**
 
-[top](#table-of-contents)
+[top](#header)
 
 ### Data Frame Basics
 
@@ -75,7 +60,7 @@ str(df)
 ##  $ col.2: num  -1.207 0.277 1.084 -2.346
 ##  $ col.3: int  5 6 7 8
 ```
-[top](#table-of-contents)
+[top](#header)
 
 #### Get Rows and Columns
 
@@ -120,7 +105,7 @@ print( df[1,] )
 ##   col.1     col.2 col.3
 ## 1     a -1.207066     5
 ```
-[top](#table-of-contents)
+[top](#header)
 
 #### Add Rows and Columns
 
@@ -160,7 +145,7 @@ rbind(df, df.more)
 ## 5     a  0.4291247     9   new
 ## 6     b  0.5060559    10   new
 ```
-[top](#table-of-contents)
+[top](#header)
 
 #### Change Columns
 
@@ -191,7 +176,7 @@ str(df)
 ##  $ col.3: int  5 6 7 8
 ##  $ col.4: logi  NA NA NA NA
 ```
-[top](#table-of-contents)
+[top](#header)
 
 #### Filter and Project
 
@@ -229,7 +214,7 @@ df[ df$col.1 == 'a', c("col.1", "col.3") ]
 ## 1     a     5
 ## 3     a     7
 ```
-[top](#table-of-contents)
+[top](#header)
 
 #### Order By
 
@@ -268,7 +253,7 @@ df[ order(df$col.1, -df$col.2), ]
 ## 2     b  0.2774292     6    NA
 ## 4     b -2.3456977     8    NA
 ```
-[top](#table-of-contents)
+[top](#header)
 
 #### Warning with Brackets
 
@@ -300,7 +285,7 @@ df["col.1"]
 ## 3     a
 ## 4     b
 ```
-[top](#table-of-contents)
+[top](#header)
 
 #### Join and Aggregate
 
@@ -346,7 +331,7 @@ ddply( df, .(col.1), summarize, sum.col.2 = sum(col.2), min.col.3 = min(col.3) )
 ## 1     a -0.1226246         5
 ## 2     b -2.0682685         6
 ```
-[top](#table-of-contents)
+[top](#header)
 
 ### List Basics
 
@@ -404,12 +389,12 @@ x[[1]] # equivalent to unlist(x[1]), see below
 ```
 
 ```r
-# Convert from list subset to vector of contained elements (assuming consistent element types)
-unlist( x[1:2] )
+# Convert from list subset to vector of contained elements (with coercion)
+unlist( x[1:3] )
 ```
 
 ```
-## [1] 1 2
+## [1] "1"     "2"     "three"
 ```
 
 ```r
@@ -438,7 +423,7 @@ tryCatch({
 ```
 ## <simpleError in x[[5000]]: subscript out of bounds>
 ```
-[top](#table-of-contents)
+[top](#header)
 
 
 

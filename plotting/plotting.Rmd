@@ -2,27 +2,14 @@
 title: "Plotting"
 output: 
   html_document:
-    keep_md: true
+    keep_md: yes
+    toc: yes
+    toc_depth: 4
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
-### Table of Contents
-
-1. [Table of Contents](#table-of-contents)
-2. [Base Plot System](#base-plot-system)
-    - [Base Histogram](#base-histogram)
-    - [Base Scatterplot](#base-scatterplot)
-          - [Scatterplot with Colors](#scatterplot-with-colors)
-          - [Scatterplot with Regression Line](#scatterplot-with-regression-line)
-    - [Base Boxplot](#base-boxplot)
-    - [Multiple Base Plots](#multiple-base-plots)
-3. [Plotting to Devices](#plotting-to-devices)
-4. [ggplot2](#ggplot2)
-    - [qplot](#qplot)
-    - [ggplot](#ggplot)
 
 ### Base Plot System
 
@@ -35,21 +22,24 @@ Basic plotting methods:
 
 Key plot parameters
 
-- `pch` (i.e. "plot char")
-- `lty` (i.e. "line type")
-- `lwd` (i.e. "line width")
-- `col` (i.e. "color")
+- `pch` (i.e. plot char) [pch values](./pch.png)
+- `lty` (i.e. line type)
+- `lwd` (i.e. line width)
+- `col` (i.e. color)
 - `xlab` (i.e. x-axis label)
 - `ylab` (i.e. y-axis label)
+
+Values for pch:
+
     
 ```{r basics}
 # We will use the airquality data frame for our plotting purposes
 library(datasets)
-df.AQ = airquality # Short names for data.frames are much nicer
+df.AQ = airquality # Short names for data frames are much nicer
 str( df.AQ )
 ```
 
-[top](#table-of-contents)
+[top](#header)
 
 #### Base Histogram
 
@@ -58,7 +48,7 @@ str( df.AQ )
 hist( df.AQ$Ozone )
 ```
 
-[top](#table-of-contents)
+[top](#header)
 
 #### Base Scatterplot
 
@@ -68,7 +58,7 @@ plot( df.AQ$Wind, df.AQ$Ozone )
 title( main = "Ozone and Wind in New York City" )
 ```
 
-[top](#table-of-contents)
+[top](#header)
 
 #### Scatterplot with Colors
 
@@ -84,7 +74,7 @@ points( df.AQ[!is5,]$Wind, df.AQ[!is5,]$Ozone, col="red" )
 legend("topright", pch=1, col=c("blue", "red"), legend=c("May", "Other Months"))
 ```
 
-[top](#table-of-contents)
+[top](#header)
 
 #### Scatterplot with Regression Line
 
@@ -95,7 +85,7 @@ model = lm( Ozone ~ Wind, df.AQ )
 abline( model, lwd=2 )
 ```
 
-[top](#table-of-contents)
+[top](#header)
 
 #### Base Boxplot
 
@@ -105,7 +95,7 @@ df.AQ$Month = as.factor( df.AQ$Month )
 boxplot( Ozone ~ Month, df.AQ, xlab="Month", ylab="Ozone (ppb)" )
 ```
 
-[top](#table-of-contents)
+[top](#header)
 
 #### Multiple Base Plots
 
@@ -119,7 +109,7 @@ plot( df.AQ$Solar.R, df.AQ$Ozone, main="Ozone and Solar Radiation" )
 par( mfrow = c(1,1) )
 ```
 
-[top](#table-of-contents)
+[top](#header)
 
 ### Plotting to Devices
 
@@ -140,7 +130,7 @@ dev.off() #closes file device
 ```
 The PDF is [here.](#example.pdf)
 
-[top](#table-of-contents)
+[top](#header)
 
 ### ggplot2
 
@@ -154,7 +144,7 @@ The PDF is [here.](#example.pdf)
     - data, generally a data.frame
     - aesthetic mappings
     - geoms (e.g. points, lines, shapes)
-    - facets
+    - facets (i.e. condition)
     - stats (e.g. binning, quantiles, smoothing)
     - scales
     - coord systems
@@ -170,40 +160,47 @@ The PDF is [here.](#example.pdf)
     - metadata and annotation
 
 ```{r my-ggplot2}
-# SEE http://ggplot2.org
-
 library(ggplot2) # comes with mpg data set
-str(mpg)
+df.MPG = mpg     # make a copy to play with, using our preferred naming convention
+str(df.MPG)
 ```
 
-[top](#table-of-contents)
+[top](#header)
 
 #### qplot
 
 ```{r qplot-basics}
-p <- qplot(displ, hwy, data = mpg)
+# Scatterplot
+p <- qplot(displ, hwy, data = df.MPG)
 print(p)
 
-p <- qplot(displ, hwy, data = mpg, color=drv)
+# Scatterplot with color codes based on type of drive
+p <- qplot(displ, hwy, data = df.MPG, color=drv)
 print(p)
 
 # add a "smoother" for 95% confidence interval
-p <- qplot(displ, hwy, data = mpg, geom = c("point", "smooth"))
+p <- qplot(displ, hwy, data = df.MPG, geom = c("point", "smooth"))
 print(p)
 
-# histogram (single dim, but still color code subsets within data points)
-p <- qplot(hwy, data = mpg, fill=drv)
+# Histogram (inferred by single dimension provided)
+#   For all of these histograms, specify a binwidth of bins to avoid warning
+p <- qplot(hwy, data = df.MPG, binwidth=2)
 print(p)
 
-# histogram with facets i.e. panels. (columns ~ rows).. '.' menas
-p <- qplot(displ, hwy, data = mpg, facets = . ~ drv)
+# Histogram with color coding of subsets
+p <- qplot(hwy, data = df.MPG, binwidth=2, fill=drv)
 print(p)
 
-#p <- qplot(hwy, data = mpg, facets = drv ~ ., binwidth=2)
+# histogram with facets i.e. panels, in this case spanning HORIZONTALLY
+p <- qplot(hwy, data = df.MPG, binwidth=2, fill=drv, facets = . ~ drv)
+print(p)
+
+# histogram with facets i.e. panels, in this case spanning VERTICALLY
+p <- qplot(hwy, data = df.MPG, binwidth=2, fill=drv, facets = drv ~ .)
 print(p)
 ```
 
-[top](#table-of-contents)
+[top](#header)
 
 #### ggplot
 
@@ -244,20 +241,20 @@ p = p + facet_grid(. ~ Month)
 p = p + ylim(-10, 50)
 print(p)
 
-# how to condition (i.e. add facets) for continuous data?  use the cut() function to add column
+# How to condition (i.e. add facets) for continuous data?  use the cut() function to add column
 # lets condition on Temp instead of Month
 cutpoints <- quantile(df.AQ$Temp, seq(0,1, length=4), na.rm=TRUE)
 df.AQ$TempDec <- cut(df.AQ$Temp, cutpoints)
 levels(df.AQ$TempDec)
 
-# now we can plot
+# Now we can plot
 p = ggplot( data = df.AQ, aes(Wind,Ozone) )  
 p = p + geom_point()   
 p = p + geom_smooth(method = "lm")  
 p = p + facet_grid(. ~ Month)
 print(p)
 
-# hell, lets make a 2 dimensional facet and condition on month and tempurature decile
+# Create a 2-dimensional facet and condition on month and tempurature decile
 p = ggplot( data = df.AQ, aes(Wind,Ozone) )  
 p = p + geom_point()   
 p = p + geom_smooth(method = "lm")  
@@ -265,4 +262,4 @@ p = p + facet_grid(Month ~ TempDec)
 print(p)
 ```
 
-[top](#table-of-contents)
+[top](#header)
