@@ -53,7 +53,7 @@ hist( df.AQ$Ozone )
 
 ![](plotting_files/figure-html/base-histogram-1.png)
 
-[top](#table-of-contents)
+[top](#header)
 
 #### Base Scatterplot
 
@@ -66,7 +66,7 @@ title( main = "Ozone and Wind in New York City" )
 
 ![](plotting_files/figure-html/base-scatterplot-1.png)
 
-[top](#table-of-contents)
+[top](#header)
 
 #### Scatterplot with Colors
 
@@ -85,7 +85,7 @@ legend("topright", pch=1, col=c("blue", "red"), legend=c("May", "Other Months"))
 
 ![](plotting_files/figure-html/scatter-with-col-1.png)
 
-[top](#table-of-contents)
+[top](#header)
 
 #### Scatterplot with Regression Line
 
@@ -99,7 +99,7 @@ abline( model, lwd=2 )
 
 ![](plotting_files/figure-html/scatter-with-reg-1.png)
 
-[top](#table-of-contents)
+[top](#header)
 
 #### Base Boxplot
 
@@ -112,7 +112,7 @@ boxplot( Ozone ~ Month, df.AQ, xlab="Month", ylab="Ozone (ppb)" )
 
 ![](plotting_files/figure-html/base-boxplot-1.png)
 
-[top](#table-of-contents)
+[top](#header)
 
 #### Multiple Base Plots
 
@@ -131,7 +131,7 @@ plot( df.AQ$Solar.R, df.AQ$Ozone, main="Ozone and Solar Radiation" )
 par( mfrow = c(1,1) )
 ```
 
-[top](#table-of-contents)
+[top](#header)
 
 ### Plotting to Devices
 
@@ -164,7 +164,7 @@ dev.off() #closes file device
 ```
 The PDF is [here.](#example.pdf)
 
-[top](#table-of-contents)
+[top](#header)
 
 ### ggplot2
 
@@ -215,7 +215,7 @@ str(df.MPG)
 ##  $ class       : chr  "compact" "compact" "compact" "compact" ...
 ```
 
-[top](#table-of-contents)
+[top](#header)
 
 #### qplot
 
@@ -277,7 +277,7 @@ print(p)
 
 ![](plotting_files/figure-html/qplot-basics-7.png)
 
-[top](#table-of-contents)
+[top](#header)
 
 #### ggplot
 
@@ -434,4 +434,4 @@ print(p)
 
 ![](plotting_files/figure-html/qqplot-basics-6.png)
 
-[top](#table-of-contents)
+[top](#header)
