@@ -54,14 +54,14 @@ knitr::opts_chunk$set(echo = TRUE)
 set.seed(1234) # Use same random data each time
 
 # Here is a data frame
-df = data.frame( 
+DF = data.frame( 
   col.1 = as.factor(c('a','b','a','b')), 
   col.2 = rnorm(1:4), 
   col.3 = 5:8 
 )
-print(df)
+print(DF)
 # An abbreviated view of the data frame.  Good for investigation of newly read/created data
-str(df)
+str(DF)
 ```
 [top](#table-of-contents)
 
@@ -70,27 +70,27 @@ str(df)
 # You may get/set the column names 
 #   i.e. names of dimensions 
 #   i.e. names of sample variables
-colnames(df)
+colnames(DF)
 # Isolate a column, NOTE that this yields a vector (array of homogenous type)
-print( df$col.2 )
+print( DF$col.2 )
 # You may get/set the row names
 #   i.e. names of records 
 #   i.e. names of tuples 
 #   i.e. names of sample observations
-rownames(df)
+rownames(DF)
 # Isolate a row , NOTE that this yields a data.frame (with only one row)
-print( df[1,] )
+print( DF[1,] )
 ```
 [top](#table-of-contents)
 
 #### Add Rows and Columns
 ```{r add-rows-and-cols}
 # Adding a column is easy
-df$col.4 = NA
-print(df)
+DF$col.4 = NA
+print(DF)
 
 # Adding rows is easy too. First, we will make some new rows
-df.more = data.frame( 
+MORE = data.frame( 
   col.1 = as.factor(c('a','b')), 
   col.2 = rnorm(1:2), 
   col.3 = 9:10,
@@ -98,18 +98,18 @@ df.more = data.frame(
 )
 
 # Now combine the rows, as in an SQL UNION
-rbind(df, df.more)
+rbind(DF, MORE)
 ```
 [top](#table-of-contents)
 
 #### Change Columns
 ```{r change-columns}
-# Currently df$col.1 is a factor vector. Lets change it to a character vector
-df$col.1 = as.character(df$col.1)
-str(df)
-# Now change df$col.1 back to a vector using a different syntax
-df = transform(df, col.1 = as.factor(col.1))
-str(df)
+# Currently DF$col.1 is a factor vector. Lets change it to a character vector
+DF$col.1 = as.character(DF$col.1)
+str(DF)
+# Now change DF$col.1 back to a vector using a different syntax
+DF = transform(DF, col.1 = as.factor(col.1))
+str(DF)
 ```
 [top](#table-of-contents)
 
@@ -117,25 +117,25 @@ str(df)
 ```{r filter-and-protect}
 
 # Create filtered subset of rows
-subset(df, df$col.1 == 'a')
+subset(DF, DF$col.1 == 'a')
 
 # You may filter and project a data frame with [,]
 # From an SQL perspective, visualize it as dataframe[ WHERE, SELECT ]
 #
-df[ df$col.1 == 'a', ] # Note 2nd param in [,] is blank to indicate all variables
+DF[ DF$col.1 == 'a', ] # Note 2nd param in [,] is blank to indicate all variables
 # Here it is again but with specific columns being projected
-df[ df$col.1 == 'a', c("col.1", "col.3") ]
+DF[ DF$col.1 == 'a', c("col.1", "col.3") ]
 ```
 [top](#table-of-contents)
 
 #### Order By
 ```{r order-by}
 # Recall you may access a row by its name, which by default is an integer sequence: 1, 2, ..., nrow
-print( df[1,] )
+print( DF[1,] )
 # You may also access rows in order of your choice
-df[ nrow(df):1, ]
+DF[ nrow(DF):1, ]
 # The order() function in base R takes column names (use '-' for descending)
-df[ order(df$col.1, -df$col.2), ]
+DF[ order(DF$col.1, -DF$col.2), ]
 ```
 [top](#table-of-contents)
 
@@ -145,9 +145,9 @@ df[ order(df$col.1, -df$col.2), ]
 #   this specifies what column(s) to project
 
 # From an SQL perspective, visualize it as dataframe[ SELECT ] 
-df[1]
+DF[1]
 # May also use a column name as a key
-df["col.1"]
+DF["col.1"]
 ```
 [top](#table-of-contents)
 
@@ -156,20 +156,20 @@ df["col.1"]
 ```{r pply}
 
 # Create a reference table.  We will use this to do a key lookup based on col.1
-df.ref = data.frame( 
+REF = data.frame( 
   col.1 = as.factor(c('a','b')), 
   col.ref1 = c('AA','BB'),
   col.ref2 = c('aaa','bbb')
 )
-print(df.ref)
+print(REF)
 
 # Using the plyr library we can JOIN the reference data to the original data
 library(plyr)
-join(df, df.ref, by="col.1")
+join(DF, REF, by="col.1")
 
 # We can also use the plyr library for GROUP BY operations on data projections
 library(plyr)
-ddply( df, .(col.1), summarize, sum.col.2 = sum(col.2), min.col.3 = min(col.3) )
+ddply( DF, .(col.1), summarize, sum.col.2 = sum(col.2), min.col.3 = min(col.3) )
 ```
 [top](#table-of-contents)
 

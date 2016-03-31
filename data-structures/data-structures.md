@@ -47,12 +47,12 @@
 set.seed(1234) # Use same random data each time
 
 # Here is a data frame
-df = data.frame( 
+DF = data.frame( 
   col.1 = as.factor(c('a','b','a','b')), 
   col.2 = rnorm(1:4), 
   col.3 = 5:8 
 )
-print(df)
+print(DF)
 ```
 
 ```
@@ -65,7 +65,7 @@ print(df)
 
 ```r
 # An abbreviated view of the data frame.  Good for investigation of newly read/created data
-str(df)
+str(DF)
 ```
 
 ```
@@ -82,7 +82,7 @@ str(df)
 # You may get/set the column names 
 #   i.e. names of dimensions 
 #   i.e. names of sample variables
-colnames(df)
+colnames(DF)
 ```
 
 ```
@@ -91,7 +91,7 @@ colnames(df)
 
 ```r
 # Isolate a column, NOTE that this yields a vector (array of homogenous type)
-print( df$col.2 )
+print( DF$col.2 )
 ```
 
 ```
@@ -103,7 +103,7 @@ print( df$col.2 )
 #   i.e. names of records 
 #   i.e. names of tuples 
 #   i.e. names of sample observations
-rownames(df)
+rownames(DF)
 ```
 
 ```
@@ -112,7 +112,7 @@ rownames(df)
 
 ```r
 # Isolate a row , NOTE that this yields a data.frame (with only one row)
-print( df[1,] )
+print( DF[1,] )
 ```
 
 ```
@@ -125,8 +125,8 @@ print( df[1,] )
 
 ```r
 # Adding a column is easy
-df$col.4 = NA
-print(df)
+DF$col.4 = NA
+print(DF)
 ```
 
 ```
@@ -139,7 +139,7 @@ print(df)
 
 ```r
 # Adding rows is easy too. First, we will make some new rows
-df.more = data.frame( 
+MORE = data.frame( 
   col.1 = as.factor(c('a','b')), 
   col.2 = rnorm(1:2), 
   col.3 = 9:10,
@@ -147,7 +147,7 @@ df.more = data.frame(
 )
 
 # Now combine the rows, as in an SQL UNION
-rbind(df, df.more)
+rbind(DF, MORE)
 ```
 
 ```
@@ -164,9 +164,9 @@ rbind(df, df.more)
 #### Change Columns
 
 ```r
-# Currently df$col.1 is a factor vector. Lets change it to a character vector
-df$col.1 = as.character(df$col.1)
-str(df)
+# Currently DF$col.1 is a factor vector. Lets change it to a character vector
+DF$col.1 = as.character(DF$col.1)
+str(DF)
 ```
 
 ```
@@ -178,9 +178,9 @@ str(df)
 ```
 
 ```r
-# Now change df$col.1 back to a vector using a different syntax
-df = transform(df, col.1 = as.factor(col.1))
-str(df)
+# Now change DF$col.1 back to a vector using a different syntax
+DF = transform(DF, col.1 = as.factor(col.1))
+str(DF)
 ```
 
 ```
@@ -196,7 +196,7 @@ str(df)
 
 ```r
 # Create filtered subset of rows
-subset(df, df$col.1 == 'a')
+subset(DF, DF$col.1 == 'a')
 ```
 
 ```
@@ -209,7 +209,7 @@ subset(df, df$col.1 == 'a')
 # You may filter and project a data frame with [,]
 # From an SQL perspective, visualize it as dataframe[ WHERE, SELECT ]
 #
-df[ df$col.1 == 'a', ] # Note 2nd param in [,] is blank to indicate all variables
+DF[ DF$col.1 == 'a', ] # Note 2nd param in [,] is blank to indicate all variables
 ```
 
 ```
@@ -220,7 +220,7 @@ df[ df$col.1 == 'a', ] # Note 2nd param in [,] is blank to indicate all variable
 
 ```r
 # Here it is again but with specific columns being projected
-df[ df$col.1 == 'a', c("col.1", "col.3") ]
+DF[ DF$col.1 == 'a', c("col.1", "col.3") ]
 ```
 
 ```
@@ -234,7 +234,7 @@ df[ df$col.1 == 'a', c("col.1", "col.3") ]
 
 ```r
 # Recall you may access a row by its name, which by default is an integer sequence: 1, 2, ..., nrow
-print( df[1,] )
+print( DF[1,] )
 ```
 
 ```
@@ -244,7 +244,7 @@ print( df[1,] )
 
 ```r
 # You may also access rows in order of your choice
-df[ nrow(df):1, ]
+DF[ nrow(DF):1, ]
 ```
 
 ```
@@ -257,7 +257,7 @@ df[ nrow(df):1, ]
 
 ```r
 # The order() function in base R takes column names (use '-' for descending)
-df[ order(df$col.1, -df$col.2), ]
+DF[ order(DF$col.1, -DF$col.2), ]
 ```
 
 ```
@@ -276,7 +276,7 @@ df[ order(df$col.1, -df$col.2), ]
 #   this specifies what column(s) to project
 
 # From an SQL perspective, visualize it as dataframe[ SELECT ] 
-df[1]
+DF[1]
 ```
 
 ```
@@ -289,7 +289,7 @@ df[1]
 
 ```r
 # May also use a column name as a key
-df["col.1"]
+DF["col.1"]
 ```
 
 ```
@@ -306,12 +306,12 @@ df["col.1"]
 
 ```r
 # Create a reference table.  We will use this to do a key lookup based on col.1
-df.ref = data.frame( 
+REF = data.frame( 
   col.1 = as.factor(c('a','b')), 
   col.ref1 = c('AA','BB'),
   col.ref2 = c('aaa','bbb')
 )
-print(df.ref)
+print(REF)
 ```
 
 ```
@@ -323,7 +323,7 @@ print(df.ref)
 ```r
 # Using the plyr library we can JOIN the reference data to the original data
 library(plyr)
-join(df, df.ref, by="col.1")
+join(DF, REF, by="col.1")
 ```
 
 ```
@@ -337,7 +337,7 @@ join(df, df.ref, by="col.1")
 ```r
 # We can also use the plyr library for GROUP BY operations on data projections
 library(plyr)
-ddply( df, .(col.1), summarize, sum.col.2 = sum(col.2), min.col.3 = min(col.3) )
+ddply( DF, .(col.1), summarize, sum.col.2 = sum(col.2), min.col.3 = min(col.3) )
 ```
 
 ```

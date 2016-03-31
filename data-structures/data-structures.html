@@ -166,19 +166,19 @@ $(document).ready(function () {
 <pre class="r"><code>set.seed(1234) # Use same random data each time
 
 # Here is a data frame
-df = data.frame( 
+DF = data.frame( 
   col.1 = as.factor(c('a','b','a','b')), 
   col.2 = rnorm(1:4), 
   col.3 = 5:8 
 )
-print(df)</code></pre>
+print(DF)</code></pre>
 <pre><code>##   col.1      col.2 col.3
 ## 1     a -1.2070657     5
 ## 2     b  0.2774292     6
 ## 3     a  1.0844412     7
 ## 4     b -2.3456977     8</code></pre>
 <pre class="r"><code># An abbreviated view of the data frame.  Good for investigation of newly read/created data
-str(df)</code></pre>
+str(DF)</code></pre>
 <pre><code>## 'data.frame':    4 obs. of  3 variables:
 ##  $ col.1: Factor w/ 2 levels &quot;a&quot;,&quot;b&quot;: 1 2 1 2
 ##  $ col.2: num  -1.207 0.277 1.084 -2.346
@@ -189,19 +189,19 @@ str(df)</code></pre>
 <pre class="r"><code># You may get/set the column names 
 #   i.e. names of dimensions 
 #   i.e. names of sample variables
-colnames(df)</code></pre>
+colnames(DF)</code></pre>
 <pre><code>## [1] &quot;col.1&quot; &quot;col.2&quot; &quot;col.3&quot;</code></pre>
 <pre class="r"><code># Isolate a column, NOTE that this yields a vector (array of homogenous type)
-print( df$col.2 )</code></pre>
+print( DF$col.2 )</code></pre>
 <pre><code>## [1] -1.2070657  0.2774292  1.0844412 -2.3456977</code></pre>
 <pre class="r"><code># You may get/set the row names
 #   i.e. names of records 
 #   i.e. names of tuples 
 #   i.e. names of sample observations
-rownames(df)</code></pre>
+rownames(DF)</code></pre>
 <pre><code>## [1] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot;</code></pre>
 <pre class="r"><code># Isolate a row , NOTE that this yields a data.frame (with only one row)
-print( df[1,] )</code></pre>
+print( DF[1,] )</code></pre>
 <pre><code>##   col.1     col.2 col.3
 ## 1     a -1.207066     5</code></pre>
 <p><a href="#table-of-contents">top</a></p>
@@ -209,15 +209,15 @@ print( df[1,] )</code></pre>
 <div id="add-rows-and-columns" class="section level4">
 <h4>Add Rows and Columns</h4>
 <pre class="r"><code># Adding a column is easy
-df$col.4 = NA
-print(df)</code></pre>
+DF$col.4 = NA
+print(DF)</code></pre>
 <pre><code>##   col.1      col.2 col.3 col.4
 ## 1     a -1.2070657     5    NA
 ## 2     b  0.2774292     6    NA
 ## 3     a  1.0844412     7    NA
 ## 4     b -2.3456977     8    NA</code></pre>
 <pre class="r"><code># Adding rows is easy too. First, we will make some new rows
-df.more = data.frame( 
+MORE = data.frame( 
   col.1 = as.factor(c('a','b')), 
   col.2 = rnorm(1:2), 
   col.3 = 9:10,
@@ -225,7 +225,7 @@ df.more = data.frame(
 )
 
 # Now combine the rows, as in an SQL UNION
-rbind(df, df.more)</code></pre>
+rbind(DF, MORE)</code></pre>
 <pre><code>##   col.1      col.2 col.3 col.4
 ## 1     a -1.2070657     5  &lt;NA&gt;
 ## 2     b  0.2774292     6  &lt;NA&gt;
@@ -237,17 +237,17 @@ rbind(df, df.more)</code></pre>
 </div>
 <div id="change-columns" class="section level4">
 <h4>Change Columns</h4>
-<pre class="r"><code># Currently df$col.1 is a factor vector. Lets change it to a character vector
-df$col.1 = as.character(df$col.1)
-str(df)</code></pre>
+<pre class="r"><code># Currently DF$col.1 is a factor vector. Lets change it to a character vector
+DF$col.1 = as.character(DF$col.1)
+str(DF)</code></pre>
 <pre><code>## 'data.frame':    4 obs. of  4 variables:
 ##  $ col.1: chr  &quot;a&quot; &quot;b&quot; &quot;a&quot; &quot;b&quot;
 ##  $ col.2: num  -1.207 0.277 1.084 -2.346
 ##  $ col.3: int  5 6 7 8
 ##  $ col.4: logi  NA NA NA NA</code></pre>
-<pre class="r"><code># Now change df$col.1 back to a vector using a different syntax
-df = transform(df, col.1 = as.factor(col.1))
-str(df)</code></pre>
+<pre class="r"><code># Now change DF$col.1 back to a vector using a different syntax
+DF = transform(DF, col.1 = as.factor(col.1))
+str(DF)</code></pre>
 <pre><code>## 'data.frame':    4 obs. of  4 variables:
 ##  $ col.1: Factor w/ 2 levels &quot;a&quot;,&quot;b&quot;: 1 2 1 2
 ##  $ col.2: num  -1.207 0.277 1.084 -2.346
@@ -258,19 +258,19 @@ str(df)</code></pre>
 <div id="filter-and-project" class="section level4">
 <h4>Filter and Project</h4>
 <pre class="r"><code># Create filtered subset of rows
-subset(df, df$col.1 == 'a')</code></pre>
+subset(DF, DF$col.1 == 'a')</code></pre>
 <pre><code>##   col.1     col.2 col.3 col.4
 ## 1     a -1.207066     5    NA
 ## 3     a  1.084441     7    NA</code></pre>
 <pre class="r"><code># You may filter and project a data frame with [,]
 # From an SQL perspective, visualize it as dataframe[ WHERE, SELECT ]
 #
-df[ df$col.1 == 'a', ] # Note 2nd param in [,] is blank to indicate all variables</code></pre>
+DF[ DF$col.1 == 'a', ] # Note 2nd param in [,] is blank to indicate all variables</code></pre>
 <pre><code>##   col.1     col.2 col.3 col.4
 ## 1     a -1.207066     5    NA
 ## 3     a  1.084441     7    NA</code></pre>
 <pre class="r"><code># Here it is again but with specific columns being projected
-df[ df$col.1 == 'a', c(&quot;col.1&quot;, &quot;col.3&quot;) ]</code></pre>
+DF[ DF$col.1 == 'a', c(&quot;col.1&quot;, &quot;col.3&quot;) ]</code></pre>
 <pre><code>##   col.1 col.3
 ## 1     a     5
 ## 3     a     7</code></pre>
@@ -279,18 +279,18 @@ df[ df$col.1 == 'a', c(&quot;col.1&quot;, &quot;col.3&quot;) ]</code></pre>
 <div id="order-by" class="section level4">
 <h4>Order By</h4>
 <pre class="r"><code># Recall you may access a row by its name, which by default is an integer sequence: 1, 2, ..., nrow
-print( df[1,] )</code></pre>
+print( DF[1,] )</code></pre>
 <pre><code>##   col.1     col.2 col.3 col.4
 ## 1     a -1.207066     5    NA</code></pre>
 <pre class="r"><code># You may also access rows in order of your choice
-df[ nrow(df):1, ]</code></pre>
+DF[ nrow(DF):1, ]</code></pre>
 <pre><code>##   col.1      col.2 col.3 col.4
 ## 4     b -2.3456977     8    NA
 ## 3     a  1.0844412     7    NA
 ## 2     b  0.2774292     6    NA
 ## 1     a -1.2070657     5    NA</code></pre>
 <pre class="r"><code># The order() function in base R takes column names (use '-' for descending)
-df[ order(df$col.1, -df$col.2), ]</code></pre>
+DF[ order(DF$col.1, -DF$col.2), ]</code></pre>
 <pre><code>##   col.1      col.2 col.3 col.4
 ## 3     a  1.0844412     7    NA
 ## 1     a -1.2070657     5    NA
@@ -304,14 +304,14 @@ df[ order(df$col.1, -df$col.2), ]</code></pre>
 #   this specifies what column(s) to project
 
 # From an SQL perspective, visualize it as dataframe[ SELECT ] 
-df[1]</code></pre>
+DF[1]</code></pre>
 <pre><code>##   col.1
 ## 1     a
 ## 2     b
 ## 3     a
 ## 4     b</code></pre>
 <pre class="r"><code># May also use a column name as a key
-df[&quot;col.1&quot;]</code></pre>
+DF[&quot;col.1&quot;]</code></pre>
 <pre><code>##   col.1
 ## 1     a
 ## 2     b
@@ -322,18 +322,18 @@ df[&quot;col.1&quot;]</code></pre>
 <div id="join-and-aggregate" class="section level4">
 <h4>Join and Aggregate</h4>
 <pre class="r"><code># Create a reference table.  We will use this to do a key lookup based on col.1
-df.ref = data.frame( 
+REF = data.frame( 
   col.1 = as.factor(c('a','b')), 
   col.ref1 = c('AA','BB'),
   col.ref2 = c('aaa','bbb')
 )
-print(df.ref)</code></pre>
+print(REF)</code></pre>
 <pre><code>##   col.1 col.ref1 col.ref2
 ## 1     a       AA      aaa
 ## 2     b       BB      bbb</code></pre>
 <pre class="r"><code># Using the plyr library we can JOIN the reference data to the original data
 library(plyr)
-join(df, df.ref, by=&quot;col.1&quot;)</code></pre>
+join(DF, REF, by=&quot;col.1&quot;)</code></pre>
 <pre><code>##   col.1      col.2 col.3 col.4 col.ref1 col.ref2
 ## 1     a -1.2070657     5    NA       AA      aaa
 ## 2     b  0.2774292     6    NA       BB      bbb
@@ -341,7 +341,7 @@ join(df, df.ref, by=&quot;col.1&quot;)</code></pre>
 ## 4     b -2.3456977     8    NA       BB      bbb</code></pre>
 <pre class="r"><code># We can also use the plyr library for GROUP BY operations on data projections
 library(plyr)
-ddply( df, .(col.1), summarize, sum.col.2 = sum(col.2), min.col.3 = min(col.3) )</code></pre>
+ddply( DF, .(col.1), summarize, sum.col.2 = sum(col.2), min.col.3 = min(col.3) )</code></pre>
 <pre><code>##   col.1  sum.col.2 min.col.3
 ## 1     a -0.1226246         5
 ## 2     b -2.0682685         6</code></pre>

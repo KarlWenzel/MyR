@@ -42,8 +42,8 @@ Values for pch:
 ```r
 # We will use the airquality data frame for our plotting purposes
 library(datasets)
-df.AQ = airquality # Short names for data frames are much nicer
-str( df.AQ )
+AQ = airquality # Short names for data frames are much nicer
+str( AQ )
 ```
 
 ```
@@ -63,7 +63,7 @@ str( df.AQ )
 
 ```r
 # Draw a histogram
-hist( df.AQ$Ozone )
+hist( AQ$Ozone )
 ```
 
 ![](plotting_files/figure-html/base-histogram-1.png)
@@ -75,7 +75,7 @@ hist( df.AQ$Ozone )
 
 ```r
 # Draw a scatterplot
-plot( df.AQ$Wind, df.AQ$Ozone )
+plot( AQ$Wind, AQ$Ozone )
 title( main = "Ozone and Wind in New York City" )
 ```
 
@@ -88,13 +88,13 @@ title( main = "Ozone and Wind in New York City" )
 
 ```r
 # Create a logical vector to be used as a filter momentarily
-is5 = ( df.AQ$Month == 5 )
+is5 = ( AQ$Month == 5 )
 
 # Draw a scatterplot again
 #   note that type="n" sets up the plot, but does not draw points
-plot( df.AQ$Wind, df.AQ$Ozone, main="Ozone and Wind in NYC", type="n" )
-points( df.AQ[is5,]$Wind, df.AQ[is5,]$Ozone, col="blue" )
-points( df.AQ[!is5,]$Wind, df.AQ[!is5,]$Ozone, col="red" )
+plot( AQ$Wind, AQ$Ozone, main="Ozone and Wind in NYC", type="n" )
+points( AQ[is5,]$Wind, AQ[is5,]$Ozone, col="blue" )
+points( AQ[!is5,]$Wind, AQ[!is5,]$Ozone, col="red" )
 legend("topright", pch=1, col=c("blue", "red"), legend=c("May", "Other Months"))
 ```
 
@@ -107,8 +107,8 @@ legend("topright", pch=1, col=c("blue", "red"), legend=c("May", "Other Months"))
 
 ```r
 # Draw a scatterplot with regression line
-plot( df.AQ$Wind, df.AQ$Ozone, main="Ozone and Wind in NYC", pch=20 ) 
-model = lm( Ozone ~ Wind, df.AQ )
+plot( AQ$Wind, AQ$Ozone, main="Ozone and Wind in NYC", pch=20 ) 
+model = lm( Ozone ~ Wind, AQ )
 abline( model, lwd=2 )
 ```
 
@@ -121,8 +121,8 @@ abline( model, lwd=2 )
 
 ```r
 # Draw a boxplot
-df.AQ$Month = as.factor( df.AQ$Month )
-boxplot( Ozone ~ Month, df.AQ, xlab="Month", ylab="Ozone (ppb)" )
+AQ$Month = as.factor( AQ$Month )
+boxplot( Ozone ~ Month, AQ, xlab="Month", ylab="Ozone (ppb)" )
 ```
 
 ![](plotting_files/figure-html/base-boxplot-1.png)
@@ -135,8 +135,8 @@ boxplot( Ozone ~ Month, df.AQ, xlab="Month", ylab="Ozone (ppb)" )
 ```r
 # Draw multiple plots on single device
 par( mfrow = c(1,2) )
-plot( df.AQ$Wind, df.AQ$Ozone, main="Ozone and Wind" )
-plot( df.AQ$Solar.R, df.AQ$Ozone, main="Ozone and Solar Radiation" )
+plot( AQ$Wind, AQ$Ozone, main="Ozone and Wind" )
+plot( AQ$Solar.R, AQ$Ozone, main="Ozone and Solar Radiation" )
 ```
 
 ![](plotting_files/figure-html/multi-base-1.png)
@@ -177,7 +177,7 @@ dev.off() #closes file device
 ## png 
 ##   2
 ```
-The PDF is [here.](#example.pdf)
+The PDF is [here.](./example.pdf)
 
 [top](#table-of-contents)
 
@@ -211,8 +211,8 @@ The PDF is [here.](#example.pdf)
 
 ```r
 library(ggplot2) # comes with mpg data set
-df.MPG = mpg     # make a copy to play with, using our preferred naming convention
-str(df.MPG)
+MPG = mpg     # make a copy to play with, using our preferred naming convention
+str(MPG)
 ```
 
 ```
@@ -237,7 +237,7 @@ str(df.MPG)
 
 ```r
 # Scatterplot
-p <- qplot(displ, hwy, data = df.MPG)
+p <- qplot(displ, hwy, data = MPG)
 print(p)
 ```
 
@@ -245,7 +245,7 @@ print(p)
 
 ```r
 # Scatterplot with color codes based on type of drive
-p <- qplot(displ, hwy, data = df.MPG, color=drv)
+p <- qplot(displ, hwy, data = MPG, color=drv)
 print(p)
 ```
 
@@ -253,7 +253,7 @@ print(p)
 
 ```r
 # add a "smoother" for 95% confidence interval
-p <- qplot(displ, hwy, data = df.MPG, geom = c("point", "smooth"))
+p <- qplot(displ, hwy, data = MPG, geom = c("point", "smooth"))
 print(p)
 ```
 
@@ -262,7 +262,7 @@ print(p)
 ```r
 # Histogram (inferred by single dimension provided)
 #   For all of these histograms, specify a binwidth of bins to avoid warning
-p <- qplot(hwy, data = df.MPG, binwidth=2)
+p <- qplot(hwy, data = MPG, binwidth=2)
 print(p)
 ```
 
@@ -270,7 +270,7 @@ print(p)
 
 ```r
 # Histogram with color coding of subsets
-p <- qplot(hwy, data = df.MPG, binwidth=2, fill=drv)
+p <- qplot(hwy, data = MPG, binwidth=2, fill=drv)
 print(p)
 ```
 
@@ -278,7 +278,7 @@ print(p)
 
 ```r
 # histogram with facets i.e. panels, in this case spanning HORIZONTALLY
-p <- qplot(hwy, data = df.MPG, binwidth=2, fill=drv, facets = . ~ drv)
+p <- qplot(hwy, data = MPG, binwidth=2, fill=drv, facets = . ~ drv)
 print(p)
 ```
 
@@ -286,7 +286,7 @@ print(p)
 
 ```r
 # histogram with facets i.e. panels, in this case spanning VERTICALLY
-p <- qplot(hwy, data = df.MPG, binwidth=2, fill=drv, facets = drv ~ .)
+p <- qplot(hwy, data = MPG, binwidth=2, fill=drv, facets = drv ~ .)
 print(p)
 ```
 
@@ -300,9 +300,9 @@ print(p)
 ```r
 # We will use the airquality dataset for this portion
 library(datasets)
-df.AQ = airquality
-df.AQ$Month = as.factor(df.AQ$Month)
-str( df.AQ )
+AQ = airquality
+AQ$Month = as.factor(AQ$Month)
+str( AQ )
 ```
 
 ```
@@ -317,7 +317,7 @@ str( df.AQ )
 
 ```r
 # no actual plot yet, but still has cool summary
-p = ggplot( data = df.AQ, aes(Wind,Ozone) )
+p = ggplot( data = AQ, aes(Wind,Ozone) )
 summary(p)
 ```
 
@@ -329,7 +329,7 @@ summary(p)
 
 ```r
 # now we added a plot
-p = ggplot( data = df.AQ, aes(Wind,Ozone) )  
+p = ggplot( data = AQ, aes(Wind,Ozone) )  
 p = p + geom_point()
 print(p)
 ```
@@ -342,7 +342,7 @@ print(p)
 
 ```r
 # add a smoother now
-p = ggplot( data = df.AQ, aes(Wind,Ozone) )  
+p = ggplot( data = AQ, aes(Wind,Ozone) )  
 p = p + geom_point()   
 p = p + geom_smooth(method = "lm")
 print(p)
@@ -358,7 +358,7 @@ print(p)
 
 ```r
 # now add facets (by month, i.e. condition our plot by month)
-p = ggplot( data = df.AQ, aes(Wind,Ozone) )  
+p = ggplot( data = AQ, aes(Wind,Ozone) )  
 p = p + geom_point()   
 p = p + geom_smooth(method = "lm")  
 p = p + facet_grid(. ~ Month)
@@ -375,7 +375,7 @@ print(p)
 
 ```r
 # add manual limits for fun
-p = ggplot( data = df.AQ, aes(Wind,Ozone) )  
+p = ggplot( data = AQ, aes(Wind,Ozone) )  
 p = p + geom_point()   
 p = p + geom_smooth(method = "lm")  
 p = p + facet_grid(. ~ Month)  
@@ -396,9 +396,9 @@ print(p)
 ```r
 # How to condition (i.e. add facets) for continuous data?  use the cut() function to add column
 # lets condition on Temp instead of Month
-cutpoints <- quantile(df.AQ$Temp, seq(0,1, length=4), na.rm=TRUE)
-df.AQ$TempDec <- cut(df.AQ$Temp, cutpoints)
-levels(df.AQ$TempDec)
+cutpoints <- quantile(AQ$Temp, seq(0,1, length=4), na.rm=TRUE)
+AQ$TempDec <- cut(AQ$Temp, cutpoints)
+levels(AQ$TempDec)
 ```
 
 ```
@@ -407,7 +407,7 @@ levels(df.AQ$TempDec)
 
 ```r
 # Now we can plot
-p = ggplot( data = df.AQ, aes(Wind,Ozone) )  
+p = ggplot( data = AQ, aes(Wind,Ozone) )  
 p = p + geom_point()   
 p = p + geom_smooth(method = "lm")  
 p = p + facet_grid(. ~ Month)
@@ -426,7 +426,7 @@ print(p)
 
 ```r
 # Create a 2-dimensional facet and condition on month and tempurature decile
-p = ggplot( data = df.AQ, aes(Wind,Ozone) )  
+p = ggplot( data = AQ, aes(Wind,Ozone) )  
 p = p + geom_point()   
 p = p + geom_smooth(method = "lm")  
 p = p + facet_grid(Month ~ TempDec)
