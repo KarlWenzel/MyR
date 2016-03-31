@@ -3,13 +3,27 @@ title: "Plotting"
 output: 
   html_document:
     keep_md: yes
-    toc: yes
     toc_depth: 4
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
+### Table of Contents
+
+1. [Table of Contents](#table-of-contents)
+2. [Base Plot System](#base-plot-system)
+    - [Base Histogram](#base-histogram)
+    - [Base Scatterplot](#base-scatterplot)
+          - [Scatterplot with Colors](#scatterplot-with-colors)
+          - [Scatterplot with Regression Line](#scatterplot-with-regression-line)
+    - [Base Boxplot](#base-boxplot)
+    - [Multiple Base Plots](#multiple-base-plots)
+3. [Plotting to Devices](#plotting-to-devices)
+4. [ggplot2](#ggplot2)
+    - [qplot](#qplot)
+    - [ggplot](#ggplot)
 
 ### Base Plot System
 
@@ -39,7 +53,7 @@ df.AQ = airquality # Short names for data frames are much nicer
 str( df.AQ )
 ```
 
-[top](#header)
+[top](#table-of-contents)
 
 #### Base Histogram
 
@@ -48,7 +62,7 @@ str( df.AQ )
 hist( df.AQ$Ozone )
 ```
 
-[top](#header)
+[top](#table-of-contents)
 
 #### Base Scatterplot
 
@@ -58,7 +72,7 @@ plot( df.AQ$Wind, df.AQ$Ozone )
 title( main = "Ozone and Wind in New York City" )
 ```
 
-[top](#header)
+[top](#table-of-contents)
 
 #### Scatterplot with Colors
 
@@ -74,7 +88,7 @@ points( df.AQ[!is5,]$Wind, df.AQ[!is5,]$Ozone, col="red" )
 legend("topright", pch=1, col=c("blue", "red"), legend=c("May", "Other Months"))
 ```
 
-[top](#header)
+[top](#table-of-contents)
 
 #### Scatterplot with Regression Line
 
@@ -85,7 +99,7 @@ model = lm( Ozone ~ Wind, df.AQ )
 abline( model, lwd=2 )
 ```
 
-[top](#header)
+[top](#table-of-contents)
 
 #### Base Boxplot
 
@@ -95,7 +109,7 @@ df.AQ$Month = as.factor( df.AQ$Month )
 boxplot( Ozone ~ Month, df.AQ, xlab="Month", ylab="Ozone (ppb)" )
 ```
 
-[top](#header)
+[top](#table-of-contents)
 
 #### Multiple Base Plots
 
@@ -109,7 +123,7 @@ plot( df.AQ$Solar.R, df.AQ$Ozone, main="Ozone and Solar Radiation" )
 par( mfrow = c(1,1) )
 ```
 
-[top](#header)
+[top](#table-of-contents)
 
 ### Plotting to Devices
 
@@ -130,7 +144,7 @@ dev.off() #closes file device
 ```
 The PDF is [here.](#example.pdf)
 
-[top](#header)
+[top](#table-of-contents)
 
 ### ggplot2
 
@@ -165,7 +179,7 @@ df.MPG = mpg     # make a copy to play with, using our preferred naming conventi
 str(df.MPG)
 ```
 
-[top](#header)
+[top](#table-of-contents)
 
 #### qplot
 
@@ -200,7 +214,7 @@ p <- qplot(hwy, data = df.MPG, binwidth=2, fill=drv, facets = drv ~ .)
 print(p)
 ```
 
-[top](#header)
+[top](#table-of-contents)
 
 #### ggplot
 
@@ -262,4 +276,4 @@ p = p + facet_grid(Month ~ TempDec)
 print(p)
 ```
 
-[top](#header)
+[top](#table-of-contents)

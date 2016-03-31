@@ -2,6 +2,21 @@
 
 
 
+### Table of Contents
+
+1. [Table of Contents](#table-of-contents)
+2. [Base Plot System](#base-plot-system)
+    - [Base Histogram](#base-histogram)
+    - [Base Scatterplot](#base-scatterplot)
+          - [Scatterplot with Colors](#scatterplot-with-colors)
+          - [Scatterplot with Regression Line](#scatterplot-with-regression-line)
+    - [Base Boxplot](#base-boxplot)
+    - [Multiple Base Plots](#multiple-base-plots)
+3. [Plotting to Devices](#plotting-to-devices)
+4. [ggplot2](#ggplot2)
+    - [qplot](#qplot)
+    - [ggplot](#ggplot)
+
 ### Base Plot System
 
 Basic plotting methods:
@@ -41,7 +56,7 @@ str( df.AQ )
 ##  $ Day    : int  1 2 3 4 5 6 7 8 9 10 ...
 ```
 
-[top](#header)
+[top](#table-of-contents)
 
 #### Base Histogram
 
@@ -53,7 +68,7 @@ hist( df.AQ$Ozone )
 
 ![](plotting_files/figure-html/base-histogram-1.png)
 
-[top](#header)
+[top](#table-of-contents)
 
 #### Base Scatterplot
 
@@ -66,7 +81,7 @@ title( main = "Ozone and Wind in New York City" )
 
 ![](plotting_files/figure-html/base-scatterplot-1.png)
 
-[top](#header)
+[top](#table-of-contents)
 
 #### Scatterplot with Colors
 
@@ -85,7 +100,7 @@ legend("topright", pch=1, col=c("blue", "red"), legend=c("May", "Other Months"))
 
 ![](plotting_files/figure-html/scatter-with-col-1.png)
 
-[top](#header)
+[top](#table-of-contents)
 
 #### Scatterplot with Regression Line
 
@@ -99,7 +114,7 @@ abline( model, lwd=2 )
 
 ![](plotting_files/figure-html/scatter-with-reg-1.png)
 
-[top](#header)
+[top](#table-of-contents)
 
 #### Base Boxplot
 
@@ -112,7 +127,7 @@ boxplot( Ozone ~ Month, df.AQ, xlab="Month", ylab="Ozone (ppb)" )
 
 ![](plotting_files/figure-html/base-boxplot-1.png)
 
-[top](#header)
+[top](#table-of-contents)
 
 #### Multiple Base Plots
 
@@ -131,7 +146,7 @@ plot( df.AQ$Solar.R, df.AQ$Ozone, main="Ozone and Solar Radiation" )
 par( mfrow = c(1,1) )
 ```
 
-[top](#header)
+[top](#table-of-contents)
 
 ### Plotting to Devices
 
@@ -164,7 +179,7 @@ dev.off() #closes file device
 ```
 The PDF is [here.](#example.pdf)
 
-[top](#header)
+[top](#table-of-contents)
 
 ### ggplot2
 
@@ -215,7 +230,7 @@ str(df.MPG)
 ##  $ class       : chr  "compact" "compact" "compact" "compact" ...
 ```
 
-[top](#header)
+[top](#table-of-contents)
 
 #### qplot
 
@@ -277,7 +292,7 @@ print(p)
 
 ![](plotting_files/figure-html/qplot-basics-7.png)
 
-[top](#header)
+[top](#table-of-contents)
 
 #### ggplot
 
@@ -434,4 +449,4 @@ print(p)
 
 ![](plotting_files/figure-html/qqplot-basics-6.png)
 
-[top](#header)
+[top](#table-of-contents)
