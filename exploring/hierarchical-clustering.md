@@ -80,7 +80,7 @@ plot(HC, xlab="Row Index", ylab="Hierarchical Grouping")
 ![](hierarchical-clustering_files/figure-html/example-2.png)
 
 ```r
-# We can also 'cut the tree' into k number of branches, gives us grouping at a certain level
+# We can also 'cut the tree' into k number of branches, gives us grouping at a specified level
 CUT = cutree(HC, k=3)
 print(CUT)
 ```
@@ -98,7 +98,7 @@ text(PTS$x, PTS$y, labels=1:nrow(PTS), cex=.7, pos=4)
 ![](hierarchical-clustering_files/figure-html/example-3.png)
 
 ```r
-# heatmap() wants to use a matrix.  Notice that the dimensions are the domain now. 
+# heatmap() requires a matrix.  Notice that the dimensions are the domain now. 
 heatmap( as.matrix(PTS), xlab="Dimensions", ylab="Rows" )
 ```
 
