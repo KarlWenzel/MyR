@@ -28,8 +28,14 @@ In general, the merges and splits are determined in a greedy manner. The results
 i.e. a tree diagram used to illustrate the hierarchical arrangment of clusters,
 and may be overlayed with [heatmaps](https://en.wikipedia.org/wiki/Heat_map).
 
+The primary R functions covered herein for hierarchical clustering:
+
+- `dist()`
+- `hclust()`
+- `cutree()`
+- `heatmap()`
+
 ```{r example}
-# dist() function creates distance matrix
 set.seed(1234)
 
 # First we shall make some random data that has a pattern.
@@ -37,26 +43,39 @@ PTS = data.frame(
     x = rnorm( 12, mean=rep(1:3, each=4), sd=0.2 ),
     y = rnorm( 12, mean=rep(c(1,2,1), each=4), sd=0.2 )
 )
-plot(PTS$x, PTS$y, pch=19)
 
-# dist() is our distance method, and it will uses Euclidean distance
+# Show the points...
+plot(PTS$x, PTS$y, xlim=c(0,3.1), pch=19, main="Points (i.e. Vectors)", xlab="x", ylab="y")
+
+# ...and label each point with its corresponding row number in the data frame
+text(PTS$x, PTS$y, labels=1:nrow(PTS), cex=.7, pos=4)
+
+# dist() is our distance method, and it determines Euclidean distance of the vectors
 #   i.e. sqrt( (a1-a2)^2 + (b1-b2)^2 + ... + (z1-z2)^2 )
-D.PTS <- dist(PTS)
-str(D.PTS)
+D <- dist(PTS)
+print( round(D, digit=2) )
 
-# hclust() turns the distance matrix into a hieararchical cluster i.e. dendrogram
-HC = hclust(D.PTS)
+# hclust() turns the distance matrix into a hclust object
+HC = hclust(D)
 
 # Note that rows (i.e. vectors) are the domain, and their distance values are the range
-plot(HC)
+plot(HC, xlab="Row Index", ylab="Hierarchical Grouping")
+
+# We can also 'cut the tree' into k number of branches, gives us grouping at a certain level
+CUT = cutree(HC, k=3)
+print(CUT)
+
+# Lets re-plot our 2D point vectors, but color on branch
+plot(PTS$x, PTS$y, xlim=c(0,3.1), pch=19, col=CUT, main="Points Colored by Group", xlab="x", ylab="y")
+text(PTS$x, PTS$y, labels=1:nrow(PTS), cex=.7, pos=4)
 
 # heatmap() wants to use a matrix.  Notice that the dimensions are the domain now. 
-heatmap( as.matrix(PTS) )
+heatmap( as.matrix(PTS), xlab="Dimensions", ylab="Rows" )
 
 # Using a dendrogram + heatmap is more useful for multivariate data.  
 # Let's make a 40 x 10 matrix full of random data.
 BIGM = matrix(rnorm(400), nrow=40)
-str(BIGM)
+head( round(BIGM, digits=2) )
 
 # This is too random, so we'll introduce a pattern. 
 pattern = rep(c(0,3), each=5)
@@ -69,8 +88,9 @@ for (i in 1:40) {
   }
 }
 
-# Now use hierarchical cluster analysis to find the pattern
-heatmap(BIGM) 
+# Now use hierarchical cluster analysis to find the pattern.
+# Notice that the dimensions are the domain, and the order of the dimensions is altered
+heatmap( BIGM, xlab="Dimensions", ylab="Rows" ) 
 
 
 

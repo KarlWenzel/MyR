@@ -2,4 +2,99 @@
 
 
 
-### Table of Contents
+
+```r
+# Singular Value Decomposition (SVD) tries to decompose a matrix as follows
+# a matrix X = UDV
+#   such that the rows of U are orthogonal (left singular vectors)
+#   and  that the cols of V are orthogonal (right singular vectors)
+#   and D is a diagonal matrix (singluar values).. basically explains column-wise in decreasing variance
+# SVD is basically trying to come up with inferring the unknown pattern(s) hidden in the data
+
+# Principle Components Analysis (PCA) uses a SVD (above) then create
+# principle components = V (above) if you first scale the variables
+# to scale, you subtract the mean, then divide by the std dev
+
+# Let's make a 40 x 10 matrix full of random data.
+M = matrix(rnorm(400), nrow=40)
+str(M)
+```
+
+```
+##  num [1:40, 1:10] -1.006 -0.296 1.566 -0.756 0.314 ...
+```
+
+```r
+# This is too random, so we'll introduce a pattern. 
+pattern = rep(c(0,3), each=5)
+str(pattern)
+```
+
+```
+##  num [1:10] 0 0 0 0 0 3 3 3 3 3
+```
+
+```r
+for (i in 1:40) {
+  coinFlip <- rbinom(1, size=1, prob=0.5)
+  if (coinFlip) {
+    M[i,] = M[i,] + pattern
+  }
+}
+
+svd1 <- svd(scale(M))
+
+# Draw that thang (er, three thangz)
+par(mar = rep(4, 4))
+par(mfrow = c(1,3))
+image(t(M)[, nrow(M):1])
+plot(svd1$u[,1], 40:1, xlab="Row", ylab="First left singular vector", pch=19)
+plot(svd1$v[,1], xlab="Column", ylab="First right singular vector", pch=19)
+```
+
+![](dimensional-reduction_files/figure-html/example-1.png)
+
+```r
+# take another look, except focus on 1st and 2nd right singlur vectors
+image(t(M)[, nrow(M):1])
+plot(svd1$v[,1], xlab="Column", ylab="First right singular vector", pch=19)
+plot(svd1$v[,2], xlab="Column", ylab="Second right singular vector", pch=19)
+```
+
+![](dimensional-reduction_files/figure-html/example-2.png)
+
+```r
+# what about the D matix? will show us in order of decreasing variance
+par(mfrow=c(1,2))
+plot(svd1$d, xlab="Column", ylab="Singular value", pch=19)
+plot(svd1$d^2/sum(svd1$d^2), xlab="Column", ylab="Prop. of variance explained", pch=19)
+```
+
+![](dimensional-reduction_files/figure-html/example-3.png)
+
+```r
+# this basically helps us determine if cols (i.e. dimensions) are dependent or independent
+
+svd1 <- svd(scale(M))
+pca1 <- prcomp(M, scale=TRUE)
+plot(pca1$rotation[,1], svd1$v[,1], pch=19, xlab="Principal Component 1", ylab="Right Singular Vector 1")
+abline(c(0,1))
+
+# Missing values screw up SVD!  THis will be misinterpreted
+# option 1: impute... takes missing rows and computes it using k-nearest neighbors
+library(impute)
+dataMatrix2 <- M
+dataMatrix2[sample(1:100, size=40, replace=FALSE)] <- NA
+dataMatrix2 <- impute.knn(dataMatrix2)$data
+svd2 <- svd(scale(dataMatrix2))
+par(mfrow=c(1,2));
+```
+
+![](dimensional-reduction_files/figure-html/example-4.png)
+
+```r
+plot(svd1$v[,1], pch=19)
+plot(svd2$v[,1], pch=19) #compares original against imputed set w/ missing values.. somehow y-axis is inverted
+```
+
+![](dimensional-reduction_files/figure-html/example-5.png)
