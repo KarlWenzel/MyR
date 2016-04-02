@@ -21,7 +21,7 @@ In general, the merges and splits are determined in a greedy manner. The results
 i.e. a tree diagram used to illustrate the hierarchical arrangment of clusters,
 and may be overlayed with [heatmaps](https://en.wikipedia.org/wiki/Heat_map).
 
-The primary R functions covered herein for hierarchical clustering:
+The following R functions for hierarchical clustering are covered herein:
 
 - `dist()`
 - `hclust()`
@@ -70,10 +70,10 @@ print( round(D, digit=2) )
 ```
 
 ```r
-# hclust() turns the distance matrix into a hclust object
+# hclust() turns the distance matrix into an hclust object
 HC = hclust(D)
 
-# Note that rows (i.e. vectors) are the domain, and their distance values are the range
+# Note that rows (i.e. vectors) are the domain, and their hierarchical grouping is the range
 plot(HC, xlab="Row Index", ylab="Hierarchical Grouping")
 ```
 
