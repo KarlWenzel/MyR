@@ -17,7 +17,11 @@ and pairs of clusters are merged as one moves up the hierarchy.
 all observations start in one cluster,
 and splits are performed recursively as one moves down the hierarchy.
 
-In general, the merges and splits are determined in a greedy manner. The results of hierarchical clustering are usually presented in a [dendrogram](https://en.wikipedia.org/wiki/Dendrogram),
+In general, the merges and splits are determined in a
+[greedy](https://en.wikipedia.org/wiki/Greedy_algorithm) manner
+(in other words, it makes locally optimal choices at each stage, in a short-sighted way).
+The results of hierarchical clustering are usually presented in a
+[dendrogram](https://en.wikipedia.org/wiki/Dendrogram),
 i.e. a tree diagram used to illustrate the hierarchical arrangment of clusters,
 and may be overlayed with [heatmaps](https://en.wikipedia.org/wiki/Heat_map).
 
@@ -32,7 +36,7 @@ The following R functions for hierarchical clustering are covered herein:
 ```r
 set.seed(1234)
 
-# First we shall make some random data that has a pattern.
+# First make some random data that has a pattern
 PTS = data.frame(
     x = rnorm( 12, mean=rep(1:3, each=4), sd=0.2 ),
     y = rnorm( 12, mean=rep(c(1,2,1), each=4), sd=0.2 )
@@ -80,7 +84,7 @@ plot(HC, xlab="Row Index", ylab="Hierarchical Grouping")
 ![](hierarchical-clustering_files/figure-html/example-2.png)
 
 ```r
-# We can also 'cut the tree' into k number of branches, gives us grouping at a specified level
+# Cutting the tree into k number of branches provides grouping at a specified level
 CUT = cutree(HC, k=3)
 print(CUT)
 ```
@@ -90,7 +94,7 @@ print(CUT)
 ```
 
 ```r
-# Lets re-plot our 2D point vectors, but color on branch
+# Re-plot our 2D point vectors, but color code based on cluster identifier
 plot(PTS$x, PTS$y, xlim=c(0,3.1), pch=19, col=CUT, main="Points Colored by Group", xlab="x", ylab="y")
 text(PTS$x, PTS$y, labels=1:nrow(PTS), cex=.7, pos=4)
 ```
@@ -106,7 +110,7 @@ heatmap( as.matrix(PTS), xlab="Dimensions", ylab="Rows" )
 
 ```r
 # Using a dendrogram + heatmap is more useful for multivariate data.  
-# Let's make a 40 x 10 matrix full of random data.
+# Create a 40 x 10 matrix full of random data.
 BIGM = matrix(rnorm(400), nrow=40)
 head( round(BIGM, digits=2) )
 ```
@@ -122,7 +126,7 @@ head( round(BIGM, digits=2) )
 ```
 
 ```r
-# This is too random, so we'll introduce a pattern. 
+# This is too random, so introduce a pattern. 
 pattern = rep(c(0,3), each=5)
 str(pattern)
 ```
