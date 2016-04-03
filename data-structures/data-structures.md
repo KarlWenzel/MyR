@@ -5,8 +5,12 @@
 ### Table of Contents
 
 1. [Table of Contents](#table-of-contents)
-2. [Basics](#some-basics)
-3. [Data Frames](#data-frame-basics)
+2. [General](#general)
+3. [Matrix](#matrix)
+    - [Transpose](#transpose)
+    - [Basic Matrix Algebra](#basic-matrix-algebra)
+    - [Plot as Image](#plot-as-image)
+4. [Data Frame](#data-frame)
     - [Get Rows and Columns](#get-rows-and-columns)
     - [Add Rows and Columns](#add-rows-and-columns)
     - [Change Columns](#change-columns)
@@ -14,9 +18,9 @@
     - [Order By](#order-by)
     - [Warning with Brackets](#warning-with-brackets)
     - [Join and Aggregate](#join-and-aggregate)
-4. [Lists](#list-basics)
+5. [List](#list)
 
-### Some Basics
+### General
 
 1. Types of **atomic vectors** (see [more](http://arrgh.tim-smith.us/atomic.html) on **vectors** from Tim Smith's page)
     - logical (may contain TRUE, FALSE, NA)
@@ -41,7 +45,140 @@
 
 [top](#table-of-contents)
 
-### Data Frame Basics
+### Matrix
+
+In mathematics, a [matrix](https://en.wikipedia.org/wiki/Matrix_(mathematics))
+is a 2-dimensional array of numbers, symbols, or expressions which are arranged by rows and columns.  A row may be thought of as a tuple or a vector, and each column may be thought of as a dimesion of a vector.
+
+![Mathematics-Matrix](./494px-Matrix.svg.png)
+
+
+```r
+# Make a simple matrix consiting on 4 vectors (3-dimensional)
+M = matrix(data = 1:12, nrow=4, ncol=3)
+print(M)
+```
+
+```
+##      [,1] [,2] [,3]
+## [1,]    1    5    9
+## [2,]    2    6   10
+## [3,]    3    7   11
+## [4,]    4    8   12
+```
+
+[top]()
+
+#### Transpose
+
+```r
+# t() for transpose (visualize as an 180 degree flip on the diagnoal axis from [1,1] to [4,3]
+t(M)
+```
+
+```
+##      [,1] [,2] [,3] [,4]
+## [1,]    1    2    3    4
+## [2,]    5    6    7    8
+## [3,]    9   10   11   12
+```
+
+[top]()
+
+#### Basic Matrix Algebra
+
+```r
+# Basic matrix algebra is easy
+M + 1000
+```
+
+```
+##      [,1] [,2] [,3]
+## [1,] 1001 1005 1009
+## [2,] 1002 1006 1010
+## [3,] 1003 1007 1011
+## [4,] 1004 1008 1012
+```
+
+```r
+M * 10
+```
+
+```
+##      [,1] [,2] [,3]
+## [1,]   10   50   90
+## [2,]   20   60  100
+## [3,]   30   70  110
+## [4,]   40   80  120
+```
+
+```r
+M / 12
+```
+
+```
+##            [,1]      [,2]      [,3]
+## [1,] 0.08333333 0.4166667 0.7500000
+## [2,] 0.16666667 0.5000000 0.8333333
+## [3,] 0.25000000 0.5833333 0.9166667
+## [4,] 0.33333333 0.6666667 1.0000000
+```
+
+```r
+# We can also do a cross product between 2 matrices
+M2 = matrix( 1:6, nrow=ncol(M) )
+M2
+```
+
+```
+##      [,1] [,2]
+## [1,]    1    4
+## [2,]    2    5
+## [3,]    3    6
+```
+
+```r
+# M: 4x3, M2: 3x2, (M x M2): 4x2
+crossprod(t(M), M2)
+```
+
+```
+##      [,1] [,2]
+## [1,]   38   83
+## [2,]   44   98
+## [3,]   50  113
+## [4,]   56  128
+```
+
+```r
+# Conjugate transpose (or the star matrix: M*)
+Conj(t(M))
+```
+
+```
+##      [,1] [,2] [,3] [,4]
+## [1,]    1    2    3    4
+## [2,]    5    6    7    8
+## [3,]    9   10   11   12
+```
+
+[top]()
+
+#### Plot as Image
+
+
+```r
+# image() provides a way to visualize the matrix.  Visualize as a spreadsheet
+#   Note: due to how image() orders points, we have to transpose and reorder rows
+#   to make it orient the same way as our matrix output appears in the console.
+image( t( M[ nrow(M):1, ] ) )
+```
+
+![](data-structures_files/figure-html/plot-as-image-1.png)
+
+[top](#table-of-contents)
+
+### Data Frame
 
 ```r
 set.seed(1234) # Use same random data each time
@@ -79,9 +216,8 @@ str(DF)
 #### Get Rows and Columns
 
 ```r
-# You may get/set the column names 
-#   i.e. names of dimensions 
-#   i.e. names of sample variables
+# You may get or set the column names 
+#   i.e. names of dimensions / sample variables
 colnames(DF)
 ```
 
@@ -99,10 +235,8 @@ print( DF$col.2 )
 ```
 
 ```r
-# You may get/set the row names
-#   i.e. names of records 
-#   i.e. names of tuples 
-#   i.e. names of sample observations
+# You may get or set the row names
+#   i.e. names of records / tuples / vectors / sample observations
 rownames(DF)
 ```
 
@@ -347,7 +481,7 @@ ddply( DF, .(col.1), summarize, sum.col.2 = sum(col.2), min.col.3 = min(col.3) )
 ```
 [top](#table-of-contents)
 
-### List Basics
+### List
 
 
 ```r

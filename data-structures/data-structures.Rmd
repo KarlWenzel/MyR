@@ -13,8 +13,12 @@ knitr::opts_chunk$set(echo = TRUE)
 ### Table of Contents
 
 1. [Table of Contents](#table-of-contents)
-2. [Basics](#some-basics)
-3. [Data Frames](#data-frame-basics)
+2. [General](#general)
+3. [Matrix](#matrix)
+    - [Transpose](#transpose)
+    - [Basic Matrix Algebra](#basic-matrix-algebra)
+    - [Plot as Image](#plot-as-image)
+4. [Data Frame](#data-frame)
     - [Get Rows and Columns](#get-rows-and-columns)
     - [Add Rows and Columns](#add-rows-and-columns)
     - [Change Columns](#change-columns)
@@ -22,9 +26,9 @@ knitr::opts_chunk$set(echo = TRUE)
     - [Order By](#order-by)
     - [Warning with Brackets](#warning-with-brackets)
     - [Join and Aggregate](#join-and-aggregate)
-4. [Lists](#list-basics)
+5. [List](#list)
 
-### Some Basics
+### General
 
 1. Types of **atomic vectors** (see [more](http://arrgh.tim-smith.us/atomic.html) on **vectors** from Tim Smith's page)
     - logical (may contain TRUE, FALSE, NA)
@@ -49,7 +53,61 @@ knitr::opts_chunk$set(echo = TRUE)
 
 [top](#table-of-contents)
 
-### Data Frame Basics
+### Matrix
+
+In mathematics, a [matrix](https://en.wikipedia.org/wiki/Matrix_(mathematics))
+is a 2-dimensional array of numbers, symbols, or expressions which are arranged by rows and columns.  A row may be thought of as a tuple or a vector, and each column may be thought of as a dimesion of a vector.
+
+![Mathematics-Matrix](./494px-Matrix.svg.png)
+
+```{r matrix}
+# Make a simple matrix consiting on 4 vectors (3-dimensional)
+M = matrix(data = 1:12, nrow=4, ncol=3)
+print(M)
+```
+
+[top]()
+
+#### Transpose
+```{r tranpose}
+# t() for transpose (visualize as an 180 degree flip on the diagnoal axis from [1,1] to [4,3]
+t(M)
+```
+
+[top]()
+
+#### Basic Matrix Algebra
+```{r matrix-algebra}
+# Basic matrix algebra is easy
+M + 1000
+M * 10
+M / 12
+
+# We can also do a cross product between 2 matrices
+M2 = matrix( 1:6, nrow=ncol(M) )
+M2
+
+# M: 4x3, M2: 3x2, (M x M2): 4x2
+crossprod(t(M), M2)
+
+# Conjugate transpose (or the star matrix: M*)
+Conj(t(M))
+```
+
+[top]()
+
+#### Plot as Image
+
+```{r plot-as-image}
+# image() provides a way to visualize the matrix.  Visualize as a spreadsheet
+#   Note: due to how image() orders points, we have to transpose and reorder rows
+#   to make it orient the same way as our matrix output appears in the console.
+image( t( M[ nrow(M):1, ] ) )
+```
+
+[top](#table-of-contents)
+
+### Data Frame
 ```{r data-frame-example}
 set.seed(1234) # Use same random data each time
 
@@ -67,16 +125,13 @@ str(DF)
 
 #### Get Rows and Columns
 ```{r get-rows-and-cols}
-# You may get/set the column names 
-#   i.e. names of dimensions 
-#   i.e. names of sample variables
+# You may get or set the column names 
+#   i.e. names of dimensions / sample variables
 colnames(DF)
 # Isolate a column, NOTE that this yields a vector (array of homogenous type)
 print( DF$col.2 )
-# You may get/set the row names
-#   i.e. names of records 
-#   i.e. names of tuples 
-#   i.e. names of sample observations
+# You may get or set the row names
+#   i.e. names of records / tuples / vectors / sample observations
 rownames(DF)
 # Isolate a row , NOTE that this yields a data.frame (with only one row)
 print( DF[1,] )
@@ -173,7 +228,7 @@ ddply( DF, .(col.1), summarize, sum.col.2 = sum(col.2), min.col.3 = min(col.3) )
 ```
 [top](#table-of-contents)
 
-### List Basics
+### List
 
 ```{r list-basics}
 # Create a list.  The '.' function from the plyr library is handy for this.

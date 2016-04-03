@@ -136,6 +136,7 @@ str(pattern)
 ```
 
 ```r
+# Approximately half of the vectors have dimensions 6 through 10 increased significantly.
 for (i in 1:40) {
   coinFlip <- rbinom(1, size=1, prob=0.5)
   if (coinFlip) {
