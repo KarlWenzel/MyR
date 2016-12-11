@@ -1,4 +1,4 @@
-# Regression
+# Least Squares and Linear Regression
 
 See https://leanpub.com/regmods
 
@@ -59,6 +59,9 @@ R has a function called lm() to do this for use (i.e. Linear Model)
 
 ```{r}
 lm(y ~ x)
+
+# Note that you can force the line to fit through the origin (0,0)
+lm(y ~ x - 1)
 ```
 
 ## Plotting with ggplot (Use geom_smooth with method=lm)
