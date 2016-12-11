@@ -7,7 +7,7 @@ Examples of how to do things in R
     - [K Means Clustering][3]
     - [Hierarchical Clustering][4]
     - [Dimensional Reduction][5]
-4. Linear Regression Modesl
+4. Linear Regression Models
     - [Least Squares and Linear Regression] [6]
     - [Linear Regression and Multivariable Regression][7]
 

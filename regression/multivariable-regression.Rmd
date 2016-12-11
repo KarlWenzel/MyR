@@ -57,6 +57,9 @@ data(diamond)
 head(diamond)
 ```
 ```{r}
+fit = lm(price ~ carat, data = diamond)
+coef(fit)
+
 g = ggplot(diamond, aes(x = carat, y = price))
 g = g + xlab("Mass (carats)")
 g = g + ylab("Price (SIN $)")
@@ -65,3 +68,37 @@ g = g + geom_point(size = 5, colour = "blue", alpha=0.2)
 g = g + geom_smooth(method = "lm", colour = "black")
 g
 ```
+
+Cool, but the Y-intercept is -259 for a 0 carat diamond, which is nonsense.  Let's mean-center our data, or in other words: change the meaning of the intercept from "what is the expected value at 0?" to "what is the expected value at u?"
+
+```{r}
+# Notice we can do arithmetic within our formula, but we need to surround it with th I() function
+#  (I stands for Inhibit interpretation/conversion of objects)
+fit2 = lm(price ~ I(carat - mean(carat)), data = diamond)
+coef(fit2)
+```
+
+OK, but since a carat is actually a large value, lets change the units to 1/10th of a carat.  To do this, we need to **multiply** the value in formula by 10
+
+```{r}
+fit3 = lm(price ~ I(carat * 10), data = diamond)
+coef(fit3)
+```
+
+## Predict
+
+Given our fit, lets use it to predict the value of some new diamonds.
+
+```{r}
+fit = lm(price ~ carat, data = diamond)
+newx = c(0.16, 0.27, 0.34)
+predict(fit, newdata = data.frame(carat = newx))
+```
+
+## Residuals
+
+Residuals represent variation left unexplained by our model. We emphasize the difference between residuals and errors. The errors unobservable true errors from the known coefficients, while residuals are the observable errors from the estimated coefficients. In a sense, the residuals are estimates of the errors.
+
+I.e. residual variation around the trend line.
+
+You may think of the residual values as the values of the outcomes Y if you remove the linear component influence of the regressors X.
