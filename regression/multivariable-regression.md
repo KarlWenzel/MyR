@@ -1,8 +1,3 @@
----
-output: 
-  html_document: 
-    keep_md: yes
----
 # Linear Regression and Multivariable Regression
 
 See https://leanpub.com/regmods
@@ -48,7 +43,8 @@ Example: $X$ is height in $m$ and $Y$ is weight in $kg$. Then $\beta_1$ is $kg/m
 
 Lets do some code
 
-```{r message=FALSE, warning=FALSE}
+
+```r
 library(UsingR)
 library(dplyr)
 library(ggplot2)
@@ -56,7 +52,18 @@ library(ggplot2)
 data(diamond)
 head(diamond)
 ```
-```{r}
+
+```
+##   carat price
+## 1  0.17   355
+## 2  0.16   328
+## 3  0.17   350
+## 4  0.18   325
+## 5  0.25   642
+## 6  0.16   342
+```
+
+```r
 g = ggplot(diamond, aes(x = carat, y = price))
 g = g + xlab("Mass (carats)")
 g = g + ylab("Price (SIN $)")
@@ -65,3 +72,5 @@ g = g + geom_point(size = 5, colour = "blue", alpha=0.2)
 g = g + geom_smooth(method = "lm", colour = "black")
 g
 ```
+
+![](multivariable-regression_files/figure-html/unnamed-chunk-2-1.png)<!-- -->

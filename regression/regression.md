@@ -1,4 +1,4 @@
-# Regression
+# Least Squares and Linear Regression
 
 See https://leanpub.com/regmods
 
@@ -49,6 +49,7 @@ The correlation is defined is
 $$
 Cor(X, Y) = \frac{Cov(X, Y)}{S_x S_y}
 $$
+Note that the Greek letter rho ($\rho$) is commonly used to represent correlation
 
 ## Finding Intercept and Slope for Line of Best Fit
 The line passes through the point $(\bar X, \bar Y$)
@@ -66,7 +67,7 @@ c(beta0, beta1)
 ```
 
 ```
-## [1] 23.9415  0.6463
+## [1] 23.9415302  0.6462906
 ```
 
 R has a function called lm() to do this for use (i.e. Linear Model)
@@ -84,7 +85,22 @@ lm(y ~ x)
 ## 
 ## Coefficients:
 ## (Intercept)            x  
-##      23.942        0.646
+##     23.9415       0.6463
+```
+
+```r
+# Note that you can force the line to fit through the origin (0,0)
+lm(y ~ x - 1)
+```
+
+```
+## 
+## Call:
+## lm(formula = y ~ x - 1)
+## 
+## Coefficients:
+##      x  
+## 0.9965
 ```
 
 ## Plotting with ggplot (Use geom_smooth with method=lm)
@@ -112,6 +128,33 @@ g <- g + geom_smooth(method="lm", formula=y~x)
 g
 ```
 
-![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4.png) 
+![](regression_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
+
+## Regression to the Mean
+
+ather's height is X variable, and son's height is Y variable.  The data is normalized, and this means that if the data had no noise, then all of the data points would fall on the identity line (green).  If the data was entirely noise, then the all data points would fall on the x-axis (i.e. the std dev of all Y values would be zero, indicating the exact center of a normal distribution), however in our model, we see that the blue line which shows our line of best fit has been skewed by noise.  Notice that it   
+
+
+```r
+data(father.son)
+y <- (father.son$sheight - mean(father.son$sheight)) / sd(father.son$sheight)
+x <- (father.son$fheight - mean(father.son$fheight)) / sd(father.son$fheight)
+rho <- cor(x, y)
+
+g = ggplot(data.frame(x = x, y = y), aes(x = x, y = y))
+g = g + geom_point(size = 6, colour = "black", alpha = 0.2)
+g = g + geom_point(size = 4, colour = "salmon", alpha = 0.2)
+g = g + xlim(-4, 4) + ylim(-4, 4)
+g = g + labs(x = "Father's Height", y = "Son's Height")
+
+g = g + geom_abline(intercept = 0, slope = 1, colour = "green")
+g = g + geom_vline(xintercept = 0)
+g = g + geom_hline(yintercept = 0)
+g = g + geom_abline(intercept = 0, slope = rho, size = 2, colour="blue")
+g = g + geom_abline(intercept = 0, slope = 1 / rho, size = 2)
+g
+```
+
+![](regression_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
 
 
