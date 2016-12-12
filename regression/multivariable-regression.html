@@ -124,6 +124,14 @@ $(document).ready(function () {
 <p>See <a href="https://leanpub.com/regmods" class="uri">https://leanpub.com/regmods</a></p>
 <p>And <a href="https://github.com/bcaffo/courses/blob/master/07_RegressionModels/" class="uri">https://github.com/bcaffo/courses/blob/master/07_RegressionModels/</a></p>
 <p>We now extend linear regression so that our models can contain more variables. A natural first approach is to assume additive effects, basically extending our line to a plane, or generalized version of a plane as we add more variables. Multivariable regression represents one of the most widely used and successful methods in statistics.</p>
+<p>Multivariate linear regression models are a very solid tool for prediction, and generally an excellent starting point in analysis.</p>
+<p><span class="math display">\[ Y_i = \beta_1 X_{1i} + \beta_2 X_{2i} + \ldots + \beta_{p} X_{pi} + \epsilon_{i} = \sum_{k=1}^p X_{ik} \beta_j + \epsilon_{i} \]</span></p>
+<p>Note that X_1i (<span class="math inline">\(X_{1i}\)</span>) is typically equal to 1, so that we can use B1 to provide our Y intercept.</p>
+<p>Least squares (and hence ML estimates under iid Gaussianity of the errors) minimizes <span class="math display">\[ \sum_{i=1}^n \left(Y_i - \sum_{k=1}^p X_{ki} \beta_j\right)^2 \]</span></p>
+<p>Note, the important linearity is linearity in the coefficients. Thus <span class="math display">\[ Y_i = \beta_1 X_{1i}^2 + \beta_2 X_{2i}^2 + \ldots + \beta_{p} X_{pi}^2 + \epsilon_{i} \]</span> is still a linear model. (We’ve just squared the elements of the predictor variables.)</p>
+<pre class="r"><code>library(UsingR)
+library(dplyr)
+library(ggplot2)</code></pre>
 </div>
 
 
