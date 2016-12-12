@@ -1,0 +1,214 @@
+---
+output: 
+  html_document: 
+    keep_md: yes
+---
+# Linear Regression: Residuals and Predictions
+
+See https://leanpub.com/regmods
+
+And https://github.com/bcaffo/courses/blob/master/07_RegressionModels/
+
+
+## Statisitcal Linear Regression Models - Add Gaussian errors
+
+Consider developing a probabilistic model for linear regression $$ Y_i = \beta_0 + \beta_1 X_i + \epsilon_{i} $$
+
+Here the $\epsilon_{i}$ are assumed iid $N(0, \sigma^2)$. 
+
+  - *remember N(u,v) is a normal distribution*
+
+Note, $E[Y_i ~|~ X_i = x_i] = \mu_i = \beta_0 + \beta_1 x_i$ 
+
+  - *remember E[x] is expected value*
+
+Note, $Var(Y_i ~|~ X_i = x_i) = \sigma^2$. 
+
+  - *this is the variance around the regression line, not the variance of the response.  it will be **lower** than the response itself because you have explained away some of the variation with X by conditioning on X*
+  
+## Interpreting Coeffecients
+
+$\beta_0$ is the expected value of the response when the predictor is 0 $$ E[Y | X = 0] = \beta_0 + \beta_1 \times 0 = \beta_0 $$
+
+Note, this isn't always of interest, for example when $X=0$ is impossible or far outside of the range of data. (X is blood pressure, or height etc.)
+
+Consider that $$ Y_i = \beta_0 + \beta_1 X_i + \epsilon_i = \beta_0 + a \beta_1 + \beta_1 (X_i - a) + \epsilon_i = \tilde \beta_0 + \beta_1 (X_i - a) + \epsilon_i $$ So, shifting your $X$ values by value $a$ changes the intercept, but not the slope.
+
+Often $a$ is set to $\bar X$ so that the intercept is interpretted as the expected response at the average $X$ value.
+
+$\beta_1$ is the expected change in response for a 1 unit change in the predictor $$ E[Y ~|~ X = x+1] - E[Y ~|~ X = x] = \beta_0 + \beta_1 (x + 1) - (\beta_0 + \beta_1 x ) = \beta_1 $$
+
+Consider the impact of changing the units of $X$. $$ Y_i = \beta_0 + \beta_1 X_i + \epsilon_i = \beta_0 + \frac{\beta_1}{a} (X_i a) + \epsilon_i = \beta_0 + \tilde \beta_1 (X_i a) + \epsilon_i $$
+
+Therefore, multiplication of $X$ by a factor $a$ results in dividing the coefficient by a factor of $a$.
+
+Example: $X$ is height in $m$ and $Y$ is weight in $kg$. Then $\beta_1$ is $kg/m$. Converting $X$ to $cm$ implies multiplying $X$ by $100 cm/m$. To get $\beta_1$ in the right units, we have to divide by $100 cm /m$ to get it to have the right units. $$ X m \times \frac{100cm}{m} = (100 X) cm \mbox{and} \beta_1 \frac{kg}{m} \times\frac{1 m}{100cm} = \left(\frac{\beta_1}{100}\right)\frac{kg}{cm} $$
+
+## Linear Regression for Prediction
+
+Lets do some code
+
+```{r message=FALSE, warning=FALSE}
+library(UsingR)
+library(dplyr)
+library(ggplot2)
+
+data(diamond)
+head(diamond)
+```
+```{r}
+fit = lm(price ~ carat, data = diamond)
+coef(fit)
+
+g = ggplot(diamond, aes(x = carat, y = price))
+g = g + xlab("Mass (carats)")
+g = g + ylab("Price (SIN $)")
+g = g + geom_point(size = 7, colour = "black", alpha=0.5)
+g = g + geom_point(size = 5, colour = "blue", alpha=0.2)
+g = g + geom_smooth(method = "lm", colour = "black")
+g
+```
+
+Cool, but the Y-intercept is -259 for a 0 carat diamond, which is nonsense.  Let's mean-center our data, or in other words: change the meaning of the intercept from "what is the expected value at 0?" to "what is the expected value at u?"
+
+```{r}
+# Notice we can do arithmetic within our formula, but we need to surround it with th I() function
+#  (I stands for Inhibit interpretation/conversion of objects)
+fit2 = lm(price ~ I(carat - mean(carat)), data = diamond)
+coef(fit2)
+```
+
+OK, but since a carat is actually a large value, lets change the units to 1/10th of a carat.  To do this, we need to **multiply** the value in formula by 10
+
+```{r}
+fit3 = lm(price ~ I(carat * 10), data = diamond)
+coef(fit3)
+```
+
+## Predict
+
+Given our fit, lets use it to predict the value of some new diamonds.
+
+```{r}
+fit = lm(price ~ carat, data = diamond)
+newx = c(0.16, 0.27, 0.34)
+predict(fit, newdata = data.frame(carat = newx))
+```
+
+## Residuals
+
+Residuals represent variation left unexplained by our model. We emphasize the difference between residuals and errors. The errors unobservable true errors from the known coefficients, while residuals are the observable errors from the estimated coefficients. In a sense, the residuals are estimates of the errors.
+
+i.e. residual variation around the trend line.
+
+You may think of the residual values as the values of the outcomes Y if you remove the linear component influence of the regressors X.
+
+```{r}
+fit = lm(price ~ carat, data = diamond)
+head( resid(fit) )
+```
+
+The variance of the error terms (i.e. the residuals) may be called sigma squared.  The error term has a normal distribution with a mean of zero, so N(0, sigma-squared)
+
+**R squared** is the percentage of total variability that is explained by the linear relationship with the predictor.
+
+- 0 <= R^2 <= 1
+- Deleting data can inflate R^2
+- Adding terms to a regression model alwasy increases R^2
+
+## Inference: The Long Way
+
+Inference is the process of drawing conclusions about a population using a sample. In statistical inference, we must account for the uncertainty in our estimates in a principled way. Hypothesis tests and confidence intervals are among the most common forms of statistical inference.
+
+We can use the variance of the Y-intercept and slope to come up with confidence intervals or hypothesis tests.  Here is the full-blown deal using pure math and primitive statistical formulas:
+
+```{r}
+y <- diamond$price
+x <- diamond$carat
+n <- length(y)
+
+# Coefficients i.e. coef( lm(y~x) )
+beta1 <- cor(y, x) * sd(y) / sd(x)
+beta0 <- mean(y) - beta1 * mean(x)
+
+# Gaussian error terms i.e. resid( lm(y~x) )
+e <- y - beta0 - beta1 * x
+
+# The estimate of the residual standard deviation
+# i.e. Residual standard error
+# i.e. standard dev of variability of actual data from the regression line
+sigma <- sqrt(sum(e^2) / (n-2)) 
+
+# sum of squares of x (used to calculate standard error terms below)
+ssx <- sum((x - mean(x))^2)
+
+# standard error terms for our Coefficients
+seBeta0 <- (1 / n + mean(x) ^ 2 / ssx) ^ .5 * sigma 
+seBeta1 <- sigma / sqrt(ssx) #this one is the more importand of the two: the slope
+
+# t-statistics (the estimate for testing if zero)
+tBeta0 <- beta0 / seBeta0
+tBeta1 <- beta1 / seBeta1
+
+# p-values.. the probability of being the t-statistic or larger, and then double it
+pBeta0 <- 2 * pt(abs(tBeta0), df = n - 2, lower.tail = FALSE)
+pBeta1 <- 2 * pt(abs(tBeta1), df = n - 2, lower.tail = FALSE)
+
+# manually build the output
+coefTable <- rbind(c(beta0, seBeta0, tBeta0, pBeta0), c(beta1, seBeta1, tBeta1, pBeta1))
+colnames(coefTable) <- c("Estimate", "Std. Error", "t value", "P(>|t|)")
+rownames(coefTable) <- c("(Intercept)", "x")
+coefTable
+```
+
+## Inference: The Short Way
+
+That is a lot of work in the section above, but fortunately we can obtain this result from built-in R functions.  Again, remember that the **t values** and **p values** are tests to see if the intercept is zero and the slope is zero.
+```{r}
+fit = lm(y ~x)
+summary(fit)$coefficients
+```
+
+.. and while we're at it, lets figure out the range of our coefficients for a 95% confidence interval
+
+**Note that this is a confidence interval on the coefficients themselves!**
+
+```{r}
+summaryCoef = summary(fit)$coefficients
+# df stands for Degrees of Freedom
+summaryCoef[1,1] + c(-1, 1) * qt(.975, df = fit$df) * summaryCoef[1, 2] # Y Intercept
+summaryCoef[2,1] + c(-1, 1) * qt(.975, df = fit$df) * summaryCoef[2, 2] # Slope: change in price for one carat increase
+```
+
+.. or easier, here is the 95% confidence interval for x = mean (you can set x to whatever you want)
+
+**Note that this interval is for Y given value(s) of X for either confidence or prediction**
+
+```{r}
+predict(fit, newdata = data.frame(x = mean(x)), interval=("confidence"))
+```
+
+## Plotting Inference
+
+```{r}
+# Remember from earlier:
+#   y <- diamond$price
+#   x <- diamond$carat
+
+xVals = seq(min(x), max(x), length=100)
+newdata <- data.frame(x = xVals)
+p1 <- data.frame(predict(fit, newdata, interval = ("confidence")) )
+p2 <- data.frame(predict(fit, newdata, interval = ("prediction")) )
+plot(x, y, frame=FALSE,xlab="Carat",ylab="Dollars",pch=21,col="black", bg="lightblue", cex=2)
+abline(fit, lwd = 2)
+lines(xVals, p1[,2], col=2); lines(xVals, p1[,3], col=2) #col=2 is red
+lines(xVals, p2[,2], col=3); lines(xVals, p2[,3], col=3) #col=3 is green
+```
+
+**Confidence intervals** tell you about how well you have determined the mean. Assume that the data really are randomly sampled from a Gaussian distribution. If you do this many times, and calculate a confidence interval of the mean from each sample, you'd expect about 95 % of those intervals to include the true value of the population mean. The key point is that the confidence interval tells you about the likely location of the true population parameter.
+
+**Prediction intervals** tell you where you can expect to see the next data point sampled. Assume that the data really are randomly sampled from a Gaussian distribution. Collect a sample of data and calculate a prediction interval. Then sample one more value from the population. If you do this many times, you'd expect that next value to lie within that prediction interval in 95% of the samples.The key point is that the prediction interval tells you about the distribution of values, not the uncertainty in determining the population mean.
+
+Prediction intervals must account for both the uncertainty in knowing the value of the population mean, plus data scatter. So a prediction interval is always wider than a confidence interval.
+
+(the above description was found here: http://www.graphpad.com/support/faqid/1506/)

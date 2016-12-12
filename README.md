@@ -9,7 +9,8 @@ Examples of how to do things in R
     - [Dimensional Reduction][5]
 4. Linear Regression Models
     - [Least Squares and Linear Regression] [6]
-    - [Linear Regression and Multivariable Regression][7]
+    - [Residuals and Prediction] [7]
+    - [Linear Regression and Multivariable Regression][8]
 
   [1]: data-structures/data-structures.md "data structures examples"
   [2]: plotting/plotting.md "plotting"
@@ -17,5 +18,6 @@ Examples of how to do things in R
   [4]: exploring/hierarchical-clustering.md "hierarchical clustering"
   [5]: exploring/dimensional-reduction.md "dimensional reduction"
   [6]: regression/regression.md "lease squares"
-  [7]: regression/multivariable-regression.md "multivariate regression"
+  [7]: regression/residuals-prediction.md "residuals and prediction"
+  [8]: regression/multivariable-regression.md "multivariate regression"
 
