@@ -1,5 +1,6 @@
 # MyR
 
+## Git notes made during lecture
 1. https://guides.github.com/activities/hello-world/
 2. https://git-scm.com/book/en/v2/Git-Branching-Branching-Workflows
 3. http://nvie.com/posts/a-successful-git-branching-model/
