@@ -1,12 +1,13 @@
 # MyR
 
-## Git notes made during lecture
+*NOTE: the following links are to good git documenation sites*
+
 1. https://guides.github.com/activities/hello-world/
 2. https://git-scm.com/book/en/v2/Git-Branching-Branching-Workflows
 3. http://nvie.com/posts/a-successful-git-branching-model/
 3. http://ndpsoftware.com/git-cheatsheet.html
 
-Examples of how to do things in R
+## Examples of how to do things in R
 
 1. [Data Structures] [1]
 2. [Plotting] [2]
