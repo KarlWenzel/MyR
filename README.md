@@ -9,15 +9,15 @@
 
 ## Examples of how to do things in R
 
-1. [Data Structures] [1]
-2. [Plotting] [2]
+1. [Data Structures][1]
+2. [Plotting][2]
 3. Exploring Data
     - [K Means Clustering][3]
     - [Hierarchical Clustering][4]
     - [Dimensional Reduction][5]
 4. Linear Regression Models
-    - [Least Squares and Linear Regression] [6]
-    - [Residuals and Prediction] [7]
+    - [Least Squares and Linear Regression][6]
+    - [Residuals and Prediction][7]
     - [Linear Regression and Multivariable Regression][8]
 
   [1]: data-structures/data-structures.md "data structures examples"
